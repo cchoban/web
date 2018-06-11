@@ -1,0 +1,24 @@
+{
+    "packageArgs": {
+        "packageName": "yarn",
+        "softwareName": "Yarn",
+        "description": "Yarn is a package manager for the npm and bower registries with a few specific",
+        "version": "1.7.0",
+        "downloadUrl": "https://yarnpkg.com/downloads/1.7.0/yarn-1.7.0.msi",
+        "checksum": "133EE49AC1000D5AC6DCB233D10E70B860F1A710CE257237A37CFEA32F5972AF",
+        "checksumType": "sha256",
+        "fileType": "msi",
+        "silentArgs": "/qn /norestart",
+        "validExitCodes": [
+            "0",
+            "3010",
+            "1641"
+        ]
+    },
+    "packageUninstallArgs": {
+        "silentArgs": "/qn /norestart"
+    },
+    "server": {
+        "icon": "https://gitlab.com/muhammedkpln/coban-packages/raw/master/icons/yarn.png"
+    }
+}

@@ -1,0 +1,13 @@
+{% extends 'app.html' %}
+
+
+{% block 'app' %}
+
+{% for i in packageId %}
+    <package-page packageName="{{ packageName }}" packageid="{{ i.id }}"></package-page>
+{% endfor %}
+
+
+    
+{% endblock %}
+
