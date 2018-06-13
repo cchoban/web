@@ -6,10 +6,8 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import ValidationError, PermissionDenied
 
-
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
@@ -31,14 +29,16 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
 
         try:
             packageExists = get_object_or_404(SubmitPackage, packageName=packageName)
-
+            print(packageExists)
             if packageExists:
-                pass
-
+                return Response(404)
         except Exception as e:
-            raise ValidationError({"detail": "This package is already submitted by another user."})
+            return False
+
+
 
         if self.request.FILES["package"]:
+            print("sa")
             uploaded = helpers.handle_uploaded_files(self.request.FILES['package'])
 
             if isinstance(uploaded, dict) and uploaded != False:
