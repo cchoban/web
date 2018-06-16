@@ -1,5 +1,5 @@
 import zipfile, os
-from .validators import validate_package, validate_file_extension
+from .validators import validate_package
 from shutil import rmtree
 from django.core.exceptions import ValidationError
 
@@ -61,16 +61,14 @@ def write(zip):
 
 
 def cleanup(packageName):
-    filesPath = os.path.join("files", packageName)
-    uploadsPath = os.path.join("uploads", packageName)
+    filesPath = os.path.join("files/", packageName)
+    uploadsPath = os.path.join("uploads/", packageName+".zip")
 
     if os.path.exists(filesPath) and os.path.exists(uploadsPath):
         try:
             rmtree(filesPath)
-            rmtree(uploadsPath)
+            os.remove(uploadsPath)
             os.removedirs(filesPath, uploadsPath)
-            # os.removedirs
         except Exception as e:
-            print(e)
-            # return False
+            return False
 

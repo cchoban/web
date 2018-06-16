@@ -1,4 +1,5 @@
-import os, json
+import os
+import json
 from os.path import splitext
 from django.core.exceptions import ValidationError
 
@@ -18,11 +19,18 @@ def validate_package(packageName):
                     js = json.load(f)
                     f.close()
 
-                js["packageArgs"]
-                js["packageUninstallArgs"]
-                js["server"]
+                    validate_keys(js)
 
                 return js
+
             except Exception as e:
                 print(e)
                 return False
+
+
+def validate_keys(js):
+    neededKeys = ["packageArgs", "packageUninstallArgs", "server"]
+
+    for i in neededKeys:
+        if not i in js:
+            return False
