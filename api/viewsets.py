@@ -23,8 +23,13 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
     def create(self, request):
         package = self.request.data.get("package")
 
-        packageExists = SubmitPackage.objects.filter(packageName=self.request.data.get("packageName").lower())[:1].exists()
-        if not packageExists:
+        submitPackageExists = SubmitPackage.objects.filter(packageName=self.request.data.get("packageName").lower())[:1].exists()
+        packageExists = Package.objects.filter(packageName=self.request.data.get("packageName").lower())[:1].exists()
+
+        if packageExists:
+            return Response({"error": "This package is already published."}, status=status.HTTP_406_NOT_ACCEPTABLE) 
+            
+        if not submitPackageExists:
             if self.request.FILES["package"] and self.request.data.get("packageName"):
                 uploaded = helpers.handle_uploaded_files(self.request.FILES['package'])
                 if isinstance(uploaded, dict) and uploaded != False:

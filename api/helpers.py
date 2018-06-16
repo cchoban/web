@@ -47,8 +47,9 @@ def handle_uploaded_files(zipRequest):
     unzip(withoutExt, os.path.join("uploads/", str(zipRequest)))
     validate = validate_package(withoutExt)
     moveIconsToStatic(withoutExt)
+    new_json = reDefineJson(withoutExt)
     if validate:
-        return validate
+        return new_json
     else:
         cleanup(str(zipRequest))
         return ValidationError(
@@ -86,6 +87,26 @@ def moveIconsToStatic(packageName):
         for ext in imageExtensions:
             if i.endswith(ext):
                 image = i
-                print(image)
-                if os.path.exists(iconsPath):
+                if os.path.exists(iconsPath) and not os.path.exists(destPath):
                     move(iconsPath, destPath)
+
+
+def reDefineJson(packageName):
+    validate = validate_package(packageName)
+    imagePath = os.path.join("packages", "static", "images", "packages", packageName)
+    imageExtensions = ["png", "jpg", "jpeg", "svg"]
+    if validate:
+        validate.pop("server")
+
+        for i in os.listdir(imagePath):
+            for ext in imageExtensions:
+                if i.endswith(ext):
+                    new_json = {
+                        "server": {
+                            "icon":  "/static/images/packages/{0}/{1}".format(packageName, i)
+                        }
+                    }
+
+                    redefined_json = {**validate, **new_json}
+
+                    return redefined_json
