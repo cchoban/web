@@ -1,6 +1,7 @@
-import zipfile, os
+import zipfile
+import os
 from .validators import validate_package
-from shutil import rmtree
+from shutil import rmtree, move
 from django.core.exceptions import ValidationError
 
 
@@ -45,6 +46,7 @@ def handle_uploaded_files(zipRequest):
     withoutExt = str(zipRequest).split('.')[0]
     unzip(withoutExt, os.path.join("uploads/", str(zipRequest)))
     validate = validate_package(withoutExt)
+    moveIconsToStatic(withoutExt)
     if validate:
         return validate
     else:
@@ -72,3 +74,18 @@ def cleanup(packageName):
         except Exception as e:
             return False
 
+
+def moveIconsToStatic(packageName):
+    iconsPath = os.path.join("files/", packageName, "icons/")
+    destPath = os.path.join("packages", "static",
+                            "images", "packages", packageName)
+    imageExtensions = ["png", "jpg", "jpeg", "svg"]
+
+
+    for i in os.listdir(iconsPath):
+        for ext in imageExtensions:
+            if i.endswith(ext):
+                image = i
+                print(image)
+                if os.path.exists(iconsPath):
+                    move(iconsPath, destPath)
