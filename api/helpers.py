@@ -3,7 +3,7 @@ import os
 from .validators import validate_package
 from shutil import rmtree, move
 from django.core.exceptions import ValidationError
-
+import json
 
 def createFolder(folderName):
     folder = "./files/" + folderName
@@ -110,3 +110,9 @@ def reDefineJson(packageName):
                     redefined_json = {**validate, **new_json}
 
                     return redefined_json
+
+def validate_json(json_object):
+    try:
+        return json.loads(json_object)
+    except json.JSONDecodeError as e:
+        return False

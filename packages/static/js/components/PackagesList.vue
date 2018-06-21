@@ -1,10 +1,24 @@
 <template>
 
 <div>
-<button class="btn btn-info" @click="goBack()" v-if="isPage == true"> Go back</button>
-<package-page :packageName="packageName" :packageid="packageId"  v-if="isPage == true"></package-page>
+<button class="btn btn-info" @click="goBack()" v-if="isPage == true" style="width:100%;margin:20px"> Go back</button>
+<package-page :packageName="packageName" :packageid="packageId" v-if="isPage == true"></package-page>
 
-<table class="table" v-if="isPage == false">
+
+<div class="container" v-if="isPage == false">
+<div class="search card card-body" style="margin-bottom:30px">
+  <h3>Search for your favorite software</h3>
+  <p class="lead">
+    Let me know your software name!
+  </p>
+  <form action="/" method="post">
+    <input type="text" class="form-control" placeholder="Software Name" v-model="search_key">
+    <br>
+    <button class="btn btn-success" v-on:click.prevent="getPackages()">Search</button>
+  </form>
+</div>
+
+<table class="table" v-if="packages.results.length > 1">
     <thead>
         <tr>
         <th scope="col">#</th>
@@ -13,32 +27,38 @@
         <th scope="col">Action</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody >
         <tr v-for="package in packages.results">
         <th scope="row" ><img :src="package.server.icon" alt="" width="50" height="50"></th>
         <th scope="row" >{{package.packageArgs.softwareName}} <br> {{ package.packageArgs.description }}</th>
         <th scope="row" >{{package.packageArgs.version}}</th>
         <!-- <td>${package}</td> -->
         <td>
-            <installButton :packageName="package.packageArgs.packageName" :packageid="package.id" @click.native="showPage(package.packageArgs.packageName, package.id)"></installButton>
+            <readMore :packageName="package.packageArgs.packageName" :packageid="package.id" @click.native="showPage(package.packageArgs.packageName, package.id)"></readMore>
+            <installCommand :packagename="package.packageName"></installCommand>
         </td>
         </tr>
     </tbody>
 </table>
+  <div v-else>
+    <div class="alert alert-info">
+        No packages found with name of <b>{{ search_key }}</b>
+    </div>
+  </div>
 
 
 
 <nav aria-label="Page navigation example">
   <ul class="pagination">
     <li class="page-item"><a class="page-link" href="#" v-if="packages.previous != null" @click="getPackages(previousUrl)">Previous</a></li>
-    <li class="page-item" v-for="num in countPageNumber"><a class="page-link" @click="getPackages(nextUrl)">{{ num }}</a></li>
+    <!-- <li class="page-item" v-for="num in countPageNumber"><a class="page-link" @click="getPackages(nextUrl)">{{ num }}</a></li> -->
     <li class="page-item"><a class="page-link"  v-if="packages.next != null" @click="getPackages(nextUrl)">Next</a></li>
   </ul>
 </nav>
 
 
 </div>
-    
+</div>
 </template>
 
 <script>
@@ -53,38 +73,41 @@ export default {
       isPage: false,
       packageName: null,
       packageId: null,
-      packages: []
+      packages: [],
+      search_key: ""
     };
   },
-  
+
   computed: {
     countPageNumber: function() {
-        var totalPageNumber = Math.round(this.count / this.maxentry)
-        return totalPageNumber
+      var totalPageNumber = Math.round(this.count / this.maxentry);
+      return totalPageNumber+1;
     }
   },
 
   mounted: function() {
     this.getPackages();
-    this.countPageNumber
-    
+    this.countPageNumber;
   },
-
 
   methods: {
     getPackages: function(url = "/api/packages") {
-      if (url != "/api/packages"){
+      if (url != "/api/packages" && url != this.nextUrl && url != this.previousUrl) {
         this.isPage = true;
+      }
+
+      if (this.search_key !== "") {
+        url = `/api/packages/?search=${this.search_key}`;
       }
 
       this.loading = true;
       axios
         .get(url)
         .then(response => {
-          this.packages = response.data
-          this.count = response.data.count
-          this.nextUrl = response.data.next
-          this.previousUrl = response.data.previous
+          this.packages = response.data;
+          this.count = response.data.count;
+          this.nextUrl = response.data.next;
+          this.previousUrl = response.data.previous;
           this.loading = false;
         })
         .catch(err => {
@@ -93,16 +116,14 @@ export default {
         });
     },
 
-    showPage: function(packageName, packageId){
-        this.packageName = packageName
-        this.packageId = packageId
-        this.isPage = true
-
+    showPage: function(packageName, packageId) {
+      this.packageName = packageName;
+      this.packageId = packageId;
+      this.isPage = true;
     },
 
-
-    goBack: function(){
-        this.isPage = false
+    goBack: function() {
+      this.isPage = false;
     }
   }
 };

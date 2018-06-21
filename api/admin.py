@@ -1,16 +1,15 @@
 from django.contrib import admin
-from .models import Package, SubmitPackage
+from .models import Package, SubmitPackage, Setting
 from django.shortcuts import get_object_or_404
 
 admin.site.register(Package)
-
+admin.site.register(Setting)
 
 def make_published(self, request, queryset):
-    packageName = queryset.get()
-    package = queryset.filter(packageName=packageName)[:1]
+    package = queryset.all()
     for i in package:
         try:
-            packageExists = Package.objects.filter(packageName=i.packageName)[:1].exists()
+            packageExists = Package.objects.filter(packageName=i.packageName).exists()
 
             if not packageExists:
                 Package.objects.create(
@@ -32,10 +31,9 @@ def make_published(self, request, queryset):
 
         except Exception as e:
             pass
-        break
 
 
-make_published.short_description = "Mark selected stories as published"
+make_published.short_description = "Mark selected packages as published"
 
 
 class SubmitPackageAdmin(admin.ModelAdmin):

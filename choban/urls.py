@@ -20,6 +20,6 @@ from packages import urls as packageUrls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path('api/', include(router.urls), name="api"),
     path('packages', include(packageUrls)),
 ]

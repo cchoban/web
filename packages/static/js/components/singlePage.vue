@@ -1,22 +1,50 @@
 <template>
-    <div class="col-md-4">
-    <div class="card mb-12">
-        <img class="card-img-top" :src="package.server.icon" alt="Card image cap">
-        <div class="card-body">
-            <h2 class="card-title">{{ package.packageArgs.softwareName }}</h2>
-            <p class="card-text">{{ package.packageArgs.description }}</p>
-            
-            <h5 class="card-title">Dependencies:</h5>
-            <p class="card-text">
-                <span v-for="package in package.packageArgs.dependencies"> {{ package }}</span>
-            </p>
+        <div id="profile">
+            <div class="card card-body mb-3">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <img class="img-fluid mb-2" :src="package.server.icon">
+                        <a href="#" target="_blank" class="btn btn-danger btn-block mb-4">Profili Görüntüle</a>
+                      </div>
+                      <div class="col-md-9">
+                        <span class="badge badge-primary">Download count: {{ package.download_count}} </span>
+                        <span class="badge badge-secondary">Last update: <timeago :since="package.updated_at"></timeago> </span>
+                        <span class="badge badge-success">Submitted at: <timeago :since="package.created_at"></timeago></span>
+                        <span class="badge badge-info">Takip Edilen: </span>
+                        <br><br>
+                        <ul class="list-group">
+                          <li class="list-group-item">Package: {{ package.packageArgs.softwareName }}</li>
+                          <li class="list-group-item">Description: {{ package.packageArgs.description }}</li>
+                          <li class="list-group-item">Version: {{ package.packageArgs.version }}</li>
+                          <li class="list-group-item">Published by: {{ package.user }}</li>
+                          <li class="list-group-item">Dependencies: <span v-for="package in package.packageArgs.dependencies"> {{ package }}</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <installCommand :packagename="package.packageName"></installCommand>
+                  <!-- <h3 class="page-heading mb-3">En son repolar</h3>
+                  <div id="repos" style ="margin-bottom: 100px;">
+                        <div class="card card-body mb-2">
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <span>Sıfırdan İleri Seviyeye Python</span>
+                                    <a href="https://www.facebook.com/" target = "_blank" class = "btn btn-danger"> Repoya Git</a>
+                                  </div>
+                                  <div class="col-md-6">
+                                  <span class="badge badge-primary">Yıldızlar:</span>
+                                  <span class="badge badge-secondary">Watchers:</span>
+                                  <span class="badge badge-success">Forks:</span>
+                                  </div>
+                                </div>
+                        </div> -->
+
+                    <!--- Repoların Gösterileceği Kısım" -->
+                  <!-- </div> -->
+
         </div>
-        <div class="card-footer text-muted">
-            Version
-            <a href="#">{{ package.packageArgs.version }}</a>
-        </div>
-        </div>
-    </div>
+
 </template>
 
 <script>
@@ -31,6 +59,7 @@ export default {
     },
     mounted: function() {
         this.getPackage(this.packageid)
+
     },
     methods: {
         getPackage(id) {

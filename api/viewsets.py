@@ -1,15 +1,32 @@
-from rest_framework import viewsets
-from .models import Package, SubmitPackage
+from rest_framework import viewsets, filters
+from .models import Package, SubmitPackage, Setting
 from .serializers import PackageSerializer, SubmitPackageSerializer
 from . import helpers
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Package.objects.all()
     serializer_class = PackageSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("packageName",)
+
+    def retrieve(self, request, pk=None):
+        queryset = Package.objects.all()
+        package = get_object_or_404(Package, pk=pk)
+        serializer = PackageSerializer(package)
+        data = {
+            "user": package.user.username
+        }
+
+        new_data = {**serializer.data, **data}
+
+
+        return Response(new_data)
 
 
 class SubmitPackageViewSet(viewsets.ModelViewSet):
@@ -27,8 +44,8 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
         packageExists = Package.objects.filter(packageName=self.request.data.get("packageName").lower())[:1].exists()
 
         if packageExists:
-            return Response({"error": "This package is already published."}, status=status.HTTP_406_NOT_ACCEPTABLE) 
-            
+            return Response({"error": "This package is already published."}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
         if not submitPackageExists:
             if self.request.FILES["package"] and self.request.data.get("packageName"):
                 uploaded = helpers.handle_uploaded_files(self.request.FILES['package'])
@@ -39,8 +56,10 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
                         serializer.save(packageName=uploaded["packageArgs"]["packageName"].lower(),
                                         packageArgs=uploaded["packageArgs"],
                                         packageUninstallArgs=uploaded["packageUninstallArgs"],
-                                        server=uploaded["server"])
-
+                                        server=uploaded["server"],
+                                        user=request.user
+                                        )
+                        Setting.objects.update(do_update_packages=True)
                         helpers.cleanup(self.request.data.get("packageName"))
 
                     return Response({"success": "You successfully submitted your package."}, status=status.HTTP_201_CREATED)

@@ -1,7 +1,11 @@
 <template>
 <div>
-    <button class="btn btn-success" @click="getPackageUrl(packageName)">Install</button>
+    <button class="btn btn-success" @click="getPackageUrl(packageName)">Read more</button>
+
+    <div v-if="commandLine">
+        <installCommand :packagename="packagename"></installCommand>
     </div>
+</div>
 </template>
 
 <script>
@@ -16,9 +20,6 @@ export default {
     methods: {
         getPackageUrl(id){
             this.isPage = true
-            // setTimeout(() => {
-            //     window.location.href = "/packages/"+id
-            // }, 200);
         }
     }
 }
