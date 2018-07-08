@@ -1,6 +1,7 @@
 <template>
 
 <div>
+
 <button class="btn btn-info" @click="goBack()" v-if="isPage == true" style="width:100%;margin:20px"> Go back</button>
 <package-page :packageName="packageName" :packageid="packageId" v-if="isPage == true"></package-page>
 
@@ -12,13 +13,13 @@
     Let me know your software name!
   </p>
   <form action="/" method="post">
-    <input type="text" class="form-control" placeholder="Software Name" v-model="search_key">
+    <input type="text" name="packageName" class="form-control" placeholder="Software Name" v-model="search_key" >
     <br>
     <button class="btn btn-success" v-on:click.prevent="getPackages()">Search</button>
   </form>
 </div>
 
-<table class="table" v-if="packages.results.length > 1">
+<table class="table" v-if="packages.results.length >= 1">
     <thead>
         <tr>
         <th scope="col">#</th>
@@ -81,7 +82,7 @@ export default {
   computed: {
     countPageNumber: function() {
       var totalPageNumber = Math.round(this.count / this.maxentry);
-      return totalPageNumber+1;
+      return totalPageNumber + 1;
     }
   },
 
@@ -92,7 +93,11 @@ export default {
 
   methods: {
     getPackages: function(url = "/api/packages") {
-      if (url != "/api/packages" && url != this.nextUrl && url != this.previousUrl) {
+      if (
+        url != "/api/packages" &&
+        url != this.nextUrl &&
+        url != this.previousUrl
+      ) {
         this.isPage = true;
       }
 
