@@ -3,7 +3,7 @@
 <div>
 
 <button class="btn btn-info" @click="goBack()" v-if="isPage == true" style="width:100%;margin:20px"> Go back</button>
-<package-page :packageName="packageName" :packageid="packageId" v-if="isPage == true"></package-page>
+<package-page :packagename="packageName" :packageid="packageId" v-if="isPage == true"></package-page>
 
 
 <div class="container" v-if="isPage == false">
@@ -129,6 +129,7 @@ export default {
 
     goBack: function() {
       this.isPage = false;
+      history.pushState(null, null, '/packages');
     }
   }
 };

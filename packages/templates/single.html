@@ -3,9 +3,21 @@
 
 {% block 'app' %}
 
-{% for i in packageId %}
+
+{% if packageId %}
+    {% for i in packageId %}
     <package-page packageName="{{ packageName }}" packageid="{{ i.id }}"></package-page>
-{% endfor %}
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">
+        No packages found with name of <span class="bold">{{ packageName }}</span>.
+        <p>You can try to search package or submit it <span class="bold"> yourself </span></p>
+    </div>
+
+    <div class="btn btn-primary"> <a href="{% url 'PackagesPage' %}" class="remove-link-attr">Search for package</a> </div>
+{% endif %}
+
+
 
 {% endblock %}
 

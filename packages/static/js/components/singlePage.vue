@@ -4,7 +4,7 @@
                     <div class="row">
                       <div class="col-md-3">
                         <img class="img-fluid mb-2" :src="package.server.icon">
-                        <a href="#" target="_blank" class="btn btn-danger btn-block mb-4">Profili Görüntüle</a>
+                        <!-- <a href="#" target="_blank" class="btn btn-danger btn-block mb-4">Profili Görüntüle</a> -->
                       </div>
                       <div class="col-md-9">
                         <span class="badge badge-primary">Download count: {{ package.download_count}} </span>
@@ -17,7 +17,11 @@
                           <li class="list-group-item">Description: {{ package.packageArgs.description }}</li>
                           <li class="list-group-item">Version: {{ package.packageArgs.version }}</li>
                           <li class="list-group-item">Published by: {{ package.user }}</li>
-                          <li class="list-group-item">Dependencies: <span v-for="package in package.packageArgs.dependencies"> {{ package }}</span></li>
+                          <li class="list-group-item" v-if="package.packageArgs.dependencies">Dependencies: 
+                            <span v-for="package in package.packageArgs.dependencies">
+                                <a :href="package"> {{ package }}</a>
+                            </span>
+                          </li>
                         </ul>
                       </div>
                     </div>
@@ -49,34 +53,39 @@
 
 <script>
 export default {
-    props: ['packagename', 'packageid'],
-    data: function() {
-        return {
-            package: [],
-            loading: true,
-            isPage: false
-        }
+  props: ["packagename", "packageid"],
+  data: function() {
+    return {
+      package: [],
+      loading: true,
+      isPage: false
+    };
+  },
+  mounted: function() {
+    this.getPackage(this.packageid);
+    this.pushState()
+  },
+  methods: {
+    getPackage(id) {
+      axios
+        .get(`/api/packages/` + id)
+        .then(response => {
+          this.package = response.data;
+          this.loading = false;
+          return true
+        })
+        .catch(err => {
+          this.loading = false;
+          return false
+        });
     },
-    mounted: function() {
-        this.getPackage(this.packageid)
 
-    },
-    methods: {
-        getPackage(id) {
-            axios.get(`/api/packages/`+id)
-            .then((response) => {
-                this.package = response.data
-                this.loading = false;
-            })
-            .catch((err) => {
-                this.loading = false;
-                console.log(err);
-            })
-        },
+    pushState() {
+        history.pushState(null, null, "/packages/"+this.packagename);
     }
-}
+  }
+};
 </script>
 
 <style>
-
 </style>
