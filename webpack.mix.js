@@ -11,8 +11,8 @@ let mix = require('laravel-mix');
  |
  */
 
-// mix.sass('resources/assets/sass/styles.scss', 'public/tjejerfragor/css'),
 mix.setPublicPath("packages")
 mix.disableSuccessNotifications();
 mix.js('packages/static/js/uncompiled/app.js', 'packages/static/js/app.js')
+mix.sass('packages/static/css/uncompiled/main.scss', 'static/css/main.css')
 
