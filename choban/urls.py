@@ -17,9 +17,20 @@ from django.contrib import admin
 from django.urls import path, include
 from .routers import router
 from packages import urls as packageUrls
-
+from packages.views import is_logged, register_view
+from django.contrib.auth.views import logout, login
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls), name="api"),
     path('packages', include(packageUrls)),
+    path("login", login, {"template_name": "auth/login.html"}, name="LoginPage"),
+    path("register", register_view, name="RegisterPage"),
+    path('logout', logout, {'next_page': '/'}),
+    path('account', logout, {'next_page': '/'}, name="AccountPage"),
+
+
+
+
+
+    path("islogged", is_logged)
 ]

@@ -1,6 +1,11 @@
 {% extends 'app.html' %}
 
 
+{% block title %}
+    Packages
+{% endblock title %}
+
+
 {% block 'app' %}
     <packages-list maxEntry="{{ maxEntry }}"></packages-list>
 {% endblock %}

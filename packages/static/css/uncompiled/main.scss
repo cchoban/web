@@ -1,0 +1,20 @@
+.left-top-menu {
+    color:#000;
+    float:right;
+    li {
+        float:left;
+        list-style-type: none;
+        display: inline-block;
+        padding-top: 0.32421875rem;
+        padding-bottom: 0.32421875rem;
+        margin-right: 1rem;
+        font-size: 1.171875rem;
+        line-height: inherit;
+        white-space: nowrap;
+    }
+
+    a {
+        text-decoration: none;
+        color:#fff
+    }
+}

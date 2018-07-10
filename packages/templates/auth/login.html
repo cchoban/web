@@ -1,0 +1,46 @@
+{% extends 'app.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+    Login
+{% endblock title %}
+
+
+{% block 'app' %}
+    {% if success %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+        {% if redirect %}
+            <script>
+                setTimeout(function(){
+                    window.location.href = "{% url 'PackagesPage' %}"
+                }, 3000)
+            </script>
+        {% endif %}
+    {% endif %}
+    {% if error %}
+        <div class="alert alert-danger">
+            <p>{{ message }}</p>
+        </div>
+    {% endif %}
+
+    <div class="card" >
+        <div class="card-body">
+          <h5 class="card-title">Login to Choban</h5>
+          <p class="card-text">
+              Not registered yet? <a href="{% url 'RegisterPage' %}"> Register here</a>
+          </p>
+            <p class="card-text">
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}
+
+            </p>
+            <button type="submit" class="btn btn-success"> Login </button>
+        </form>
+        </div>
+      </div>
+{% endblock %}
+

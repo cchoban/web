@@ -1,20 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import os
 import json
 from api import helpers as api_helpers
 from . import helpers
 from api.models import Package, Setting
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.urls import reverse
 from rest_framework.authentication import TokenAuthentication
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.views import APIView
-# Create your views here.
-
-
+from .forms import LoginForm, RegisterForm
+from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.http import require_http_methods
 def index(request):
 
     context = {
@@ -23,6 +23,41 @@ def index(request):
 
     return render(request, "index.html", context)
 
+
+def register_view(request):
+    form = RegisterForm(request.POST or None)
+    context = {
+        "register_form": form,
+        "message": "",
+        "success": None,
+        "error":None,
+        "redirect": False
+    }
+
+    if request.method == "POST":
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password1")
+
+            if request.user.is_authenticated:
+                return redirect("/")
+
+            try:
+                createUser = form.save()
+
+                auth = authenticate(username=username, password=password)
+                login_to_system = login(request, auth)
+
+                context["success"] = True
+                context["message"] = "You have successfully registered."
+                context["redirect"] = True
+            except Exception as e:
+                print(e)
+                context["error"] = True
+                context["message"] = "Could not register, please try again another time."
+
+    print(context)
+    return render(request, "auth/register.html", context)
 
 def getPackage(request, packageName):
 
@@ -62,3 +97,10 @@ def package_list(request):
             })
 
     return JsonResponse(json)
+
+@require_http_methods(["GET"])
+def is_logged(request):
+    if request.user.is_authenticated:
+        return JsonResponse({"auth": True})
+    else:
+        return JsonResponse({"auth": False})
