@@ -41,11 +41,11 @@
         </tr>
     </tbody>
 </table>
-  <div v-else>
-    <div class="alert alert-info">
-        No packages found with name of <b>{{ search_key }}</b>
-    </div>
+<div v-else>
+  <div class="alert alert-info">
+      No packages found <b v-if="search_key">{{ search_key }}</b>
   </div>
+</div>
 
 
 
