@@ -22,12 +22,34 @@
                                 <a :href="package"> {{ package }}</a>
                             </span>
                           </li>
+                          <li class="list-group-item">
+                            Install: <installCommand :packagename="package.packageName"></installCommand>
+                          </li>
                         </ul>
                       </div>
                     </div>
                   </div>
+                  <div class="as">
+                    <a href="" class="btn btn-info" @click.prevent="showIcerik('install')">Install Script</a>
+                    <a href="" class="btn btn-info" @click.prevent="showIcerik('uninstall')">Uninstall Script</a>
 
-                  <installCommand :packagename="package.packageName"></installCommand>
+                    <div  v-if="active == 'install'">
+                      <pre v-highlightjs>
+                      <code class="json">
+{{ package.packageArgs }}
+                      </code>
+                      </pre>
+                    </div>
+
+                    <div  v-if="active == 'uninstall'">
+                      <pre v-highlightjs>
+                        <code class="json">
+{{ package.packageUninstallArgs }}
+                        </code>
+                      </pre>
+                    </div>
+                  </div>
+
                   <!-- <h3 class="page-heading mb-3">En son repolar</h3>
                   <div id="repos" style ="margin-bottom: 100px;">
                         <div class="card card-body mb-2">
@@ -52,16 +74,19 @@
 </template>
 
 <script>
+var hljs = require("highlight.js")
 export default {
   props: ["packagename", "packageid"],
   data: function() {
     return {
       package: [],
       loading: true,
-      isPage: false
+      isPage: false,
+      active: false
     };
   },
   mounted: function() {
+    hljs.initHighlightingOnLoad();
     this.getPackage(this.packageid);
     this.pushState()
   },
@@ -78,6 +103,16 @@ export default {
           this.loading = false;
           return false
         });
+    },
+
+    showIcerik(todo){
+      if (this.active == todo) {
+        this.active = false
+        return true
+      }
+
+      this.active = todo
+
     },
 
     pushState() {

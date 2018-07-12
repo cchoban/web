@@ -19,6 +19,17 @@
   </form>
 </div>
 
+
+<div class="float-right background-gray switch-command">
+  <label class="switch">
+    <input type="checkbox" v-model="showCommandLine">
+    <span class="slider round"></span>
+  </label>
+  <p>
+    Enable fast installation
+  </p>
+</div>
+
 <table class="table" v-if="packages.results.length > 0">
     <thead>
         <tr>
@@ -35,8 +46,7 @@
         <th scope="row" >{{package.packageArgs.version}}</th>
         <!-- <td>${package}</td> -->
         <td>
-            <readMore :packageName="package.packageArgs.packageName" :packageid="package.id" @click.native="showPage(package.packageArgs.packageName, package.id)"></readMore>
-            <installCommand :packagename="package.packageName"></installCommand>
+            <readMore :packageName="package.packageArgs.packageName" :packageid="package.id" :showCommandLine="showCommandLine" @click.native="showPage(package.packageArgs.packageName, package.id)"></readMore>
         </td>
         </tr>
     </tbody>
@@ -75,7 +85,8 @@ export default {
       packageName: null,
       packageId: null,
       packages: [],
-      search_key: ""
+      search_key: "",
+      showCommandLine: false
     };
   },
 

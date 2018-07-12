@@ -40,3 +40,5 @@ Vue.use(VueTimeago, {
 const app = new Vue({
     el: '#app'
 });
+
+require("./vue-directives.js")
