@@ -19,7 +19,7 @@
   </form>
 </div>
 
-<table class="table" v-if="packages.results.length >= 1">
+<table class="table" v-if="packages.results.length > 0">
     <thead>
         <tr>
         <th scope="col">#</th>
@@ -52,7 +52,7 @@
 <nav aria-label="Page navigation example">
   <ul class="pagination">
     <li class="page-item"><a class="page-link" href="#" v-if="packages.previous != null" @click="getPackages(previousUrl)">Previous</a></li>
-    <!-- <li class="page-item" v-for="num in countPageNumber"><a class="page-link" @click="getPackages(nextUrl)">{{ num }}</a></li> -->
+    <li class="page-item" v-for="(num, pages) in countPageNumber"><a class="page-link" @click="getPackages('http://localhost:8000/api/packages/?limit=10&offset='+num)">{{ pages }}</a></li>
     <li class="page-item"><a class="page-link"  v-if="packages.next != null" @click="getPackages(nextUrl)">Next</a></li>
   </ul>
 </nav>
@@ -81,8 +81,14 @@ export default {
 
   computed: {
     countPageNumber: function() {
-      var totalPageNumber = Math.round(this.count / this.maxentry);
-      return totalPageNumber + 1;
+      var totalPageNumber = Math.ceil(this.count / this.maxentry);
+
+      var pages = {}
+      var offset = -10
+      for (var page=1;page<=totalPageNumber;page++){
+          pages[page]= offset +=10
+      }
+      return pages;
     }
   },
 
@@ -93,14 +99,13 @@ export default {
 
   methods: {
     getPackages: function(url = "/api/packages") {
-      if (
-        url != "/api/packages" &&
-        url != this.nextUrl &&
-        url != this.previousUrl
-      ) {
-        this.isPage = true;
-      }
-
+      // if (
+      //   url != "/api/packages" &&
+      //   url != this.nextUrl &&
+      //   url != this.previousUrl
+      // ) {
+      //   this.isPage = true;
+      // }
       if (this.search_key !== "") {
         url = `/api/packages/?search=${this.search_key}`;
       }
@@ -129,7 +134,7 @@ export default {
 
     goBack: function() {
       this.isPage = false;
-      history.pushState(null, null, '/packages');
+      history.pushState(null, null, "/packages");
     }
   }
 };
