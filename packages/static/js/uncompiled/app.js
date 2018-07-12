@@ -1,6 +1,5 @@
 window.Vue = require('vue');
 window.axios = require('axios');
-import VeeValidator from 'vee-validate';
 import VueTimeago from 'vue-timeago';
 
 
@@ -28,7 +27,6 @@ Vue.component('readMore', require('../components/readMore.vue'));
 Vue.component('package-page', require('../components/singlePage.vue'));
 Vue.component('installCommand', require('../components/installCommandLine.vue'));
 
-Vue.use(VeeValidator)
 Vue.use(VueTimeago, {
     name: 'Timeago', // Component name, `Timeago` by default
     locale: null, // Default locale
