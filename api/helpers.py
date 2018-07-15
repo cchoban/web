@@ -54,6 +54,7 @@ def handle_uploaded_files(zipRequest):
     if validate:
         version = check_package_version(new_json)
         if bool(version["status"]):
+            new_json["status"] = True
             return new_json
         else:
             return {"status": False, "message": version["message"]}
@@ -130,10 +131,11 @@ def check_package_version(json_object):
     package_version = js["packageArgs"]["version"]
 
     repo = Package.objects.filter(packageName=package_name) or SubmitPackage.objects.filter(packageName=package_name)
-    repo_version = repo.get().packageArgs["version"]
+
 
     if repo.exists():
+        repo_version = repo.get().packageArgs["version"]
         if repo_version >= package_version:
             return {"status": False, "message": "We have never version of this package on system."}
     else:
-        return True
+        return {"status": True, "message": "Sucess"}
