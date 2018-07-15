@@ -39,17 +39,30 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         package = self.request.data.get("package")
+        package_name = self.request.data.get("packageName")
 
-        submitPackageExists = SubmitPackage.objects.filter(packageName=self.request.data.get("packageName").lower())[:1].exists()
-        packageExists = Package.objects.filter(packageName=self.request.data.get("packageName").lower())[:1].exists()
+        if package_name != str(package).split(".")[0]:
+            return Response({"error": "Could not accept your request."}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
-        if packageExists:
+        packageExists = Package.objects.filter(packageName=package_name.lower())[:1].exists()
+        packageOwner = Package.objects.filter(packageName=package_name.lower(), user=self.request.user.id).exists()
+
+
+        submitPackages_packageOwner = SubmitPackage.objects.filter(packageName=package_name.lower(), user=self.request.user.id).exists()
+        submitPackageExists = SubmitPackage.objects.filter(packageName=package_name.lower())[:1].exists()
+
+
+        if packageExists and not packageOwner and not submitPackages_packageOwner:
             return Response({"error": "This package is already published."}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         if not submitPackageExists:
             if self.request.FILES["package"] and self.request.data.get("packageName"):
                 uploaded = helpers.handle_uploaded_files(self.request.FILES['package'])
-                if isinstance(uploaded, dict) and uploaded != False:
+
+                if not bool(uploaded["status"]):
+                    return Response({"error": uploaded["message"]}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+                if isinstance(uploaded, dict) or uploaded != False:
                     serializer = SubmitPackageSerializer(data=request.data)
                     validated = serializer.is_valid()
                     if validated:

@@ -4,6 +4,9 @@ from .validators import validate_package
 from shutil import rmtree, move
 from django.core.exceptions import ValidationError
 import json
+from .models import Package, SubmitPackage
+from django.shortcuts import get_object_or_404
+
 
 def createFolder(folderName):
     folder = "./files/" + folderName
@@ -49,7 +52,11 @@ def handle_uploaded_files(zipRequest):
     moveIconsToStatic(withoutExt)
     new_json = reDefineJson(withoutExt)
     if validate:
-        return new_json
+        version = check_package_version(new_json)
+        if bool(version["status"]):
+            return new_json
+        else:
+            return {"status": False, "message": version["message"]}
     else:
         cleanup(str(zipRequest))
         return ValidationError(
@@ -116,3 +123,17 @@ def validate_json(json_object):
         return json.loads(json_object)
     except json.JSONDecodeError as e:
         return False
+
+def check_package_version(json_object):
+    js = json_object
+    package_name = js["packageArgs"]["packageName"]
+    package_version = js["packageArgs"]["version"]
+
+    repo = Package.objects.filter(packageName=package_name) or SubmitPackage.objects.filter(packageName=package_name)
+    repo_version = repo.get().packageArgs["version"]
+
+    if repo.exists():
+        if repo_version >= package_version:
+            return {"status": False, "message": "We have never version of this package on system."}
+    else:
+        return True
