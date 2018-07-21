@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 import os
 import json
 from api import helpers as api_helpers
@@ -13,6 +13,9 @@ from django.views.decorators.http import require_http_methods
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
+from django_gravatar.helpers import get_gravatar_url, has_gravatar, get_gravatar_profile_url, calculate_gravatar_hash
+from django.contrib.auth.models import User
+
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -76,7 +79,23 @@ def getPackage(request, packageName):
     return render(request, "single.html", context)
 
 
+class AccountView(TemplateView):
+    '''
+    Profile page for user
+    '''
+    def get(self, request, username = ""):
+        context = {}
+        user_details = get_object_or_404(User, username=username)
+        user_packages = Package.objects.filter(user=user_details.id)
 
+        if has_gravatar(user_details.email):
+            context["profile_picture"] = get_gravatar_url(user_details.email, size=650)
+
+
+        context["user_package_count"] = len(user_packages)
+        context["username"] = user_details.username
+        context["user_packages"] = user_packages
+        return render(request, 'auth/account.html', context)
 
 class AccountTokenView(LoginRequiredMixin, TemplateView):
     def get(self, request):

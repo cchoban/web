@@ -25,7 +25,7 @@
     <div class="container">
       <a href="{% url 'PackagesPage' %}" class="navbar-brand">Choban Package Manager</a>
       {% if user.is_authenticated %}
-        <a href="{% url 'AccountPage' %}" class="navbar-brand float-right">{{ user.username }}</a>
+        <a href="{% url 'AccountPage' user.username|slugify %}" class="navbar-brand float-right">{{ user.username }}</a>
       {% else %}
         <ul class="left-top-menu">
           <li><a href="{% url 'LoginPage' %}"> Login </a></li>

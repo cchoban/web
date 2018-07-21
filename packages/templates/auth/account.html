@@ -1,0 +1,68 @@
+{% extends 'app.html' %}
+
+{% block title %} {{ username }}'s profile {% endblock title %}
+
+{% block 'app' %}
+<div id="profile">
+    <div class="card card-body mb-3">
+        <div class="row">
+            <div class="col-md-3">
+                <img class="img-fluid mb-2" src="{{ profile_picture }}">
+                <!-- <a href="#" target="_blank" class="btn btn-danger btn-block mb-4">Profili Görüntüle</a> -->
+            </div>
+            <div class="col-md-9">
+                <span class="badge badge-primary">Username: {{ username }}</span>
+                <span class="badge badge-secondary">User total packages: {{ user_package_count }}</span>
+                <!-- <span class="badge badge-success">Submitted at:</span>
+                <span class="badge badge-info">Takip Edilen: </span> -->
+                <br>
+                <br>
+                <ul class="list-group">
+                    <li class="list-group-item">Username: {{ username }}</li>
+                    <li class="list-group-item"> <a href="{% url 'TokenPage' %}" class="btn btn-primary">Get Token</a></li>
+                    <!-- <li class="list-group-item">Description: {{ package.packageArgs.description }}</li>
+                  <li class="list-group-item">Version: {{ package.packageArgs.version }}</li>
+                  <li class="list-group-item">Published by: {{ package.user }}</li>
+                  <li class="list-group-item">Dependencies:  -->
+                    <!-- <span >
+                        <a href="package"> {{ package }}</a>
+                    </span> -->
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr>
+            <h4>
+                {{ username }}'s Packages
+            </h4>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Package</th>
+                    <th scope="col">Version</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for package in user_packages %}
+                <tr>
+                    <th scope="row">
+                        <img src="{{ package.server.icon }}" alt="" width="50" height="50">
+                    </th>
+                    <th scope="row">{{ package }}
+                        <br> {{ package.description }}</th>
+                    <th scope="row">{{ package.packageArgs__version }}</th>
+                    <td>
+                        <div>
+                            <button class="btn btn-success">Read more</button>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock 'app' %}

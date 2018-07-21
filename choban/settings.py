@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'api',
     'packages',
     'rest_framework.authtoken',
-    'crispy_forms'
+    'crispy_forms',
+    'django_gravatar'
 ]
 
 MIDDLEWARE = [
@@ -88,8 +89,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'django',
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'postgres',
+        'PASSWORD': '665200',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
