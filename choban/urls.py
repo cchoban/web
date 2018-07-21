@@ -19,6 +19,8 @@ from .routers import router
 from packages import urls as packageUrls
 from packages.views import is_logged, register_view
 from django.contrib.auth.views import logout, login
+from packages.views import AccountTokenView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls), name="api"),
@@ -27,9 +29,7 @@ urlpatterns = [
     path("register", register_view, name="RegisterPage"),
     path('logout', logout, {'next_page': '/'}),
     path('account', logout, {'next_page': '/'}, name="AccountPage"),
-
-
-
+    path('account/token', AccountTokenView.as_view(), name='TokenPage'),
 
 
     path("islogged", is_logged)

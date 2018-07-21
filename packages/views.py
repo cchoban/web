@@ -7,14 +7,19 @@ from api.models import Package, Setting
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse, Http404
 from django.urls import reverse
-from rest_framework.authentication import TokenAuthentication
-
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.views import APIView
 from .forms import LoginForm, RegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_http_methods
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.views import APIView
+
+
 def index(request):
 
     context = {
@@ -59,6 +64,7 @@ def register_view(request):
     print(context)
     return render(request, "auth/register.html", context)
 
+
 def getPackage(request, packageName):
 
     id = Package.objects.filter(packageArgs__packageName=packageName)[:1]
@@ -68,6 +74,28 @@ def getPackage(request, packageName):
         "packageId": id
     }
     return render(request, "single.html", context)
+
+
+
+
+class AccountTokenView(LoginRequiredMixin, TemplateView):
+    def get(self, request):
+        context = {}
+        return render(request, 'auth/get_token.html', context)
+
+    def post(self, request):
+        token = Token.objects.filter(user=request.user)
+        if token.exists() and not request.POST.get('generate_new_token'):
+            return JsonResponse({"status": False, "message": "Your account has already a token.", "key": token.get(user=request.user).key})
+        elif request.POST.get('generate_new_token'):
+            update_token = Token.objects.filter(user=request.user)
+            update_token.delete()
+
+
+        create_token = Token.objects.create(user=request.user)
+        if create_token:
+            return JsonResponse({"status": True, "message": "You successfully generated your new key!", "key": create_token.key})
+
 
 
 @api_view(['GET'])
