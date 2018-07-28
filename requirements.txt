@@ -4,3 +4,4 @@ psycopg2
 django-crispy-forms
 django-gravatar2
 gunicorn
+whitenoise
