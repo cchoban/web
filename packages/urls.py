@@ -23,4 +23,4 @@ urlpatterns = [
     path('/', index, name="PackagesPage"),
     path("/repo", package_list),
     path('/<slug:packageName>', getPackage, name="getPackage")
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]

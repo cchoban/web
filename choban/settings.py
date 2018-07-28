@@ -98,7 +98,7 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': 'C:\\Users\\Muhammed Kaplan\\Documents\\django\\cache',
+        'LOCATION': os.path.join(BASE_DIR, "cache"),
     }
 }
 
