@@ -27,6 +27,7 @@ Vue.component('readMore', require('../components/readMore.vue'));
 Vue.component('package-page', require('../components/singlePage.vue'));
 Vue.component('installCommand', require('../components/installCommandLine.vue'));
 Vue.component('apikey', require('../components/api_key.vue'));
+console.log("sa")
 
 Vue.use(VueTimeago, {
     name: 'Timeago', // Component name, `Timeago` by default

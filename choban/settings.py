@@ -25,7 +25,7 @@ SECRET_KEY = 'cilm0^9**l(b+jo927ptjm2+%fx=jxgi66a%3*c*31rg2^s0z8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["choban.herokuapp.com"]
+ALLOWED_HOSTS = ["choban.herokuapp.com", "localhost"]
 
 
 # Application definition
@@ -145,7 +145,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_DIRS  = [
     os.path.join(BASE_DIR, "packages", "static")
 ]
-
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10
