@@ -1954,7 +1954,9 @@ function is_logged() {
   });
 }
 
+var csrf_token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['X-CSRFToken'] = csrf_token;
 window.logged = is_logged();
 
 Vue.component('packages-list', __webpack_require__(52));
@@ -1962,8 +1964,7 @@ Vue.component('readMore', __webpack_require__(55));
 Vue.component('package-page', __webpack_require__(61));
 Vue.component('installCommand', __webpack_require__(243));
 Vue.component('apikey', __webpack_require__(248));
-console.log("sa");
-
+console.log(csrf_token);
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_timeago__["a" /* default */], {
   name: 'Timeago', // Component name, `Timeago` by default
   locale: null, // Default locale

@@ -17,18 +17,17 @@ function is_logged(){
     });
 }
 
+var csrf_token = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['X-CSRFToken'] = csrf_token;
 window.logged = is_logged()
-
-
 
 Vue.component('packages-list', require('../components/PackagesList.vue'));
 Vue.component('readMore', require('../components/readMore.vue'));
 Vue.component('package-page', require('../components/singlePage.vue'));
 Vue.component('installCommand', require('../components/installCommandLine.vue'));
 Vue.component('apikey', require('../components/api_key.vue'));
-console.log("sa")
-
+console.log(csrf_token)
 Vue.use(VueTimeago, {
     name: 'Timeago', // Component name, `Timeago` by default
     locale: null, // Default locale
