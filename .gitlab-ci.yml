@@ -9,8 +9,8 @@ image: python:latest
 services:
   - postgres:latest
 
-variables:
-  POSTGRES_DB: django
+#variables:
+#  POSTGRES_DB: django
 
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
@@ -31,8 +31,8 @@ before_script:
   - npm install
 
 test:
-  variables:
-    DATABASE_URL: "postgresql://localhost:postgres@665200:5432/$POSTGRES_DB"
+#  variables:
+#    DATABASE_URL: "postgresql://localhost:postgres@665200:5432/$POSTGRES_DB"
   script:
   - npm run dev
   - python manage.py test
