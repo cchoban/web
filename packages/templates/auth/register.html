@@ -6,10 +6,15 @@
     Register
 {% endblock title %}
 
+
 {% block 'app' %}
     {% if success %}
-        <div class="alert alert-success">
-            {{ message }}
+        <div class="ui possitive message">
+            <i class="close icon"></i>
+            <div class="header">
+                We're sorry we can't process your request.
+            </div>
+            <p>{{ message }}</p>
         </div>
         {% if redirect %}
             <script>
@@ -20,23 +25,27 @@
         {% endif %}
     {% endif %}
     {% if error %}
-        <div class="alert alert-danger">
-            <p>{{ message }}</p>
+    <div class="ui negative message">
+        <i class="close icon"></i>
+        <div class="header">
+            We're sorry we can't process your request.
         </div>
+        <p>{{ message }}</p>
+    </div>
     {% endif %}
 
-    <div class="card" >
-        <div class="card-body">
-          <h5 class="card-title">Register to Choban</h5>
-            <p class="card-text">
-            <form action="" method="POST">
+    <div class="ui container">
+    <div class="ui segment">
+          <h5 class="ui header">Register to Choban</h5>
+            <p>
+            <form action="" method="POST" class="ui form">
                 {% csrf_token %}
                 {{ register_form|crispy }}
 
             </p>
-            <button type="submit" class="btn btn-success"> Register </button>
+            <button type="submit" class="ui button positive"> Register </button>
         </form>
         </div>
-      </div>
+        </div>
 {% endblock %}
 

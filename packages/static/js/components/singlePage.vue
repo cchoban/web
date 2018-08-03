@@ -36,7 +36,7 @@
                     <div  v-if="active == 'install'">
                       <pre v-highlightjs>
                       <code class="json">
-{{ package.packageArgs }}
+                          {{ package.packageArgs }}
                       </code>
                       </pre>
                     </div>
@@ -44,7 +44,7 @@
                     <div  v-if="active == 'uninstall'">
                       <pre v-highlightjs>
                         <code class="json">
-{{ package.packageUninstallArgs }}
+                          {{ package.packageUninstallArgs }}
                         </code>
                       </pre>
                     </div>
@@ -82,6 +82,7 @@ export default {
       package: [],
       loading: true,
       isPage: false,
+      storeman:store,
       active: false
     };
   },
@@ -116,6 +117,7 @@ export default {
     },
 
     pushState() {
+        store.state.history.push(this.packagename)
         history.pushState(null, null, "/packages/"+this.packagename);
     }
   }

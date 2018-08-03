@@ -12,7 +12,8 @@ from django.shortcuts import get_object_or_404
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Package.objects.all()
     serializer_class = PackageSerializer
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter, )
+    ordering_fields = ('created_at', 'updated_at','download_count', )
     search_fields = ("packageName",)
 
     def retrieve(self, request, pk=None):

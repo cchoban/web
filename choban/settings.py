@@ -25,7 +25,7 @@ SECRET_KEY = 'cilm0^9**l(b+jo927ptjm2+%fx=jxgi66a%3*c*31rg2^s0z8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["choban.herokuapp.com", "localhost"]
+ALLOWED_HOSTS = ["choban.herokuapp.com", "localhost", "*"]
 
 
 # Application definition
@@ -149,5 +149,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10
 }
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = 'semantic-ui'
 LOGIN_REDIRECT_URL = '/packages'

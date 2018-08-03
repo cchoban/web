@@ -1,13 +1,14 @@
 window.Vue = require('vue');
 window.axios = require('axios');
+var Vuex = require('vuex')
 import VueTimeago from 'vue-timeago';
 
 
-function is_logged(){
+function is_logged() {
   axios
     .get("/islogged")
     .then(response => {
-      if(response.data.auth){
+      if (response.data.auth) {
         return true
       }
     })
@@ -27,17 +28,43 @@ Vue.component('readMore', require('../components/readMore.vue'));
 Vue.component('package-page', require('../components/singlePage.vue'));
 Vue.component('installCommand', require('../components/installCommandLine.vue'));
 Vue.component('apikey', require('../components/api_key.vue'));
-console.log(csrf_token)
+Vue.component('search-package', require('../components/Search.vue'));
+Vue.component('app', require('../components/app.vue'));
+
+
+
+Vue.use(Vuex)
 Vue.use(VueTimeago, {
-    name: 'Timeago', // Component name, `Timeago` by default
-    locale: null, // Default locale
-    locales: {
-      'zh-CN': require('date-fns/locale/zh_cn'),
-      'ja': require('date-fns/locale/ja'),
-    }
-  })
+  name: 'Timeago', // Component name, `Timeago` by default
+  locale: null, // Default locale
+  locales: {
+    'zh-CN': require('date-fns/locale/zh_cn'),
+    'ja': require('date-fns/locale/ja'),
+  }
+})
+
+window.store = new Vuex.Store({
+  state: {
+    package_page: {
+      packages: null,
+      count: null,
+      nextUrl: null,
+      previousUrl: null
+    },
+    search_key: null,
+    isPage: false,
+    package: {
+      name:"",
+      id: null
+    },
+    history: [],
+    reload: true
+  }
+})
+
+
 const app = new Vue({
-    el: '#app'
+  el: '#app'
 });
 
 require("./vue-directives.js")
