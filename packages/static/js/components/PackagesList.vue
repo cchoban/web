@@ -161,38 +161,17 @@
                             <p class="bold">Recent Articles</p>
                         </div>
                         <div class="ui secondary segment panel-content">
-                            <div class="ui attached segment listings">
-                                <div class="topla">
-                                    <img class="ui avatar image remove-circle" src="https://d12xoj7p9moygp.cloudfront.net/favicon/favicon-128.png" alt="">
-                                    <span class="text">This segment is attached on both sides</span>
-                                    <span class="right-floated day">5 day ago</span>
-                                </div>
-
-                            </div>
+                        <div v-if="loading">
+                            <div class="ui attached segment loading"><br></div>
                         </div>
-                        <div class="ui panel-footer column">
-                            <a class="removelink loadMoreBtn">
-                                <i class="angle down icon light" style="font-size:20px;margin:0 auto"></i>
-                            </a>
+                        <div class="ui attached segment listings" v-for="package in discoverPackages.slice(0, 5)" @click="showPage(package.packageName, package.id)">
+                            <div class="topla" >
+                                <img class="ui avatar image remove-circle" :src="package.server.icon" alt="">
+                                <span class="text">{{ package.packageName }}</span>
+                                <span class="right-floated day"><timeago :since="package.updated_at"></timeago></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="inner-section">
-                    <div class="ui segments panel">
-                        <div class="ui segment panel-header">
-                            <p class="bold">Feeds</p>
-                        </div>
-                        <div class="ui secondary segment panel-content">
-                            <div class="ui attached segment listings">
-                                <div class="topla">
-                                    <img class="ui avatar image remove-circle" src="https://d12xoj7p9moygp.cloudfront.net/favicon/favicon-128.png" alt="">
-                                    <span class="text">This segment is attached on both sides</span>
-                                    <span class="right-floated day"><i class="angle right icon"></i></span>
-                                </div>
-
-                            </div>
-                        </div>
                         <div class="ui panel-footer column">
                             <a class="removelink loadMoreBtn">
                                 <i class="angle down icon light" style="font-size:20px;margin:0 auto"></i>
@@ -235,6 +214,7 @@ export default {
       packages: [],
       popularPackages: null,
       recentPackages: null,
+      discoverPackages: null,
       search_key: "",
       showCommandLine: false,
       store: null,
@@ -261,6 +241,7 @@ export default {
     // this.store = store;
     this.getPopular();
     this.getRecent();
+    this.getDiscover();
     this.countPageNumber;
   },
 
@@ -287,6 +268,24 @@ export default {
           this.loading = false;
         })
         .catch(err => {
+          console.log(err);
+        });
+    },
+
+    getDiscover: function name() {
+      var url = "/api/packages";
+      axios
+        .get(url)
+        .then(response => {
+          this.packages = response.data;
+          this.discoverPackages = this.shuffleArray(response.data.results);
+          this.count = response.data.count;
+          this.nextUrl = response.data.next;
+          this.previousUrl = response.data.previous;
+          this.loading = false;
+        })
+        .catch(err => {
+          this.loading = false;
           console.log(err);
         });
     },
@@ -318,6 +317,17 @@ export default {
     goBack: function() {
       this.store.state.isPage = false;
       history.pushState(null, null, "/packages");
+    },
+
+    shuffleArray: function(sourceArray) {
+      for (var i = 0; i < sourceArray.length - 1; i++) {
+        var j = i + Math.floor(Math.random() * (sourceArray.length - i));
+
+        var temp = sourceArray[j];
+        sourceArray[j] = sourceArray[i];
+        sourceArray[i] = temp;
+      }
+      return sourceArray;
     }
   }
 };
