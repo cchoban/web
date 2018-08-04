@@ -1,16 +1,13 @@
 <template>
-    <div>
-
-        <div class="searchField column">
-            <!-- <form class="ui form"> -->
-                <div class="ui form">
-                    <div class="field">
-                        <input name="packageName" placeholder="Search what you want" type="text" v-model="store.state.search_key" @keyup.enter.prevent="getPackages">
-                    </div>
-                </div>
-            <!-- </form> -->
-        </div>
-    </div>
+      <div class="searchField column">
+          <form class="ui form">
+              <div class="ui form">
+                  <div class="field">
+                      <input name="packageName" placeholder="Search for your favorite package" type="text" v-model="store.state.search_key" @keyup.enter.prevent="getPackages">
+                  </div>
+              </div>
+          </form>
+      </div>
 </template>
 
 <script>

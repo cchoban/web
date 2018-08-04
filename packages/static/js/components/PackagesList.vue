@@ -5,13 +5,14 @@
 <button class="ui positive button" @click="goBack" v-if="store.state.isPage" style="width:100%;margin:20px"> Go back</button>
 <package-page :packagename="store.state.package.name" :packageid="store.state.package.id" v-if="store.state.isPage"></package-page>
 
-<div class="right floated background-gray switch-command">
+<!-- <div class="background-gray switch-command">
     <div class="ui toggle checkbox">
       <input name="public" type="checkbox" v-model="showCommandLine">
       <label>Enable fast installation</label>
     </div>
-</div>
+</div> -->
 
+<div v-if="!store.state.isPage">
 <div class="ui container fluid left">
 
         <div class="featured-items twentyfivepx">
@@ -20,47 +21,14 @@
             </div>
 
             <div class="featured-item-list">
-                <a class="featured-item" style='background-image: linear-gradient(to top, black, transparent), url("https://media.npr.org/assets/img/2016/05/19/invisibiliapodcast_icon_hotpink-01_sq-2359778531d9733109e3674a5cecf5a711aa511f.jpg?s=200");'>
-                    <h1>People In Tech</h1>
-                    <p></p>
-                    <label> podcast </label>
-                </a>
 
-                <a class="featured-item" style='background-image: linear-gradient(to top, black, transparent), url("https://media.npr.org/assets/img/2016/05/19/invisibiliapodcast_icon_hotpink-01_sq-2359778531d9733109e3674a5cecf5a711aa511f.jpg?s=200");'>
-                    <h1>People In Tech</h1>
-                    <p></p>
-                    <label> podcast </label>
-                </a>
-
-                <a class="featured-item" style='background-image: linear-gradient(to top, black, transparent), url("https://media.npr.org/assets/img/2016/05/19/invisibiliapodcast_icon_hotpink-01_sq-2359778531d9733109e3674a5cecf5a711aa511f.jpg?s=200");'>
-                    <h1>People In Tech</h1>
-                    <p></p>
-                    <label> podcast </label>
-                </a>
-
-                <a class="featured-item" style='background-image: linear-gradient(to top, black, transparent), url("https://media.npr.org/assets/img/2016/05/19/invisibiliapodcast_icon_hotpink-01_sq-2359778531d9733109e3674a5cecf5a711aa511f.jpg?s=200");'>
-                    <h1>People In Tech</h1>
-                    <p></p>
-                    <label> podcast </label>
-                </a>
-
-                <a class="featured-item" style='background-image: linear-gradient(to top, black, transparent), url("https://media.npr.org/assets/img/2016/05/19/invisibiliapodcast_icon_hotpink-01_sq-2359778531d9733109e3674a5cecf5a711aa511f.jpg?s=200");'>
-                    <h1>People In Tech</h1>
-                    <p></p>
-                    <label> podcast </label>
-                </a>
-
-                <a class="featured-item" style='background-image: linear-gradient(to top, black, transparent), url("https://media.npr.org/assets/img/2016/05/19/invisibiliapodcast_icon_hotpink-01_sq-2359778531d9733109e3674a5cecf5a711aa511f.jpg?s=200");'>
-                    <h1>People In Tech</h1>
-                    <p></p>
-                    <label> podcast </label>
-                </a>
-
-                <a class="featured-item" style='background-image: linear-gradient(to top, black, transparent), url("https://media.npr.org/assets/img/2016/05/19/invisibiliapodcast_icon_hotpink-01_sq-2359778531d9733109e3674a5cecf5a711aa511f.jpg?s=200");'>
-                    <h1>People In Tech</h1>
-                    <p></p>
-                    <label> podcast </label>
-                </a>
+                <div v-for="package in popularPackages.slice(0, 10)" v-if="!loading">
+                    <a class="featured-item" :style='"background-image: linear-gradient(to top, black, transparent), url("+package.server.icon+");"' @click="showPage(package.packageName, package.id)">
+                        <h1> {{ package.packageName }} </h1>
+                        <p></p>
+                        <label> {{ package.category }} </label>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -79,7 +47,10 @@
                         <p class="bold">Popular</p>
                     </div>
                     <div class="ui secondary segment panel-content">
-                        <div class="ui attached segment listings" v-for="package in store.state.package_page.packages" @click="showPage(package.packageName, package.id)">
+                        <div v-if="loading">
+                            <div class="ui attached segment loading"><br></div>
+                        </div>
+                        <div class="ui attached segment listings" v-for="package in popularPackages.slice(0, 5)" @click="showPage(package.packageName, package.id)">
                             <div class="topla" >
                                 <img class="ui avatar image remove-circle" :src="package.server.icon" alt="">
                                 <span class="text">{{ package.packageName }}</span>
@@ -90,6 +61,7 @@
                     <div class="ui panel-footer column">
                         <a class="removelink loadMoreBtn">
                             <i class="angle down icon light" style="font-size:20px;margin:0 auto"></i>
+                            <!-- TODO: create popular packages section for recent packages -->
                         </a>
                     </div>
                 </div>
@@ -97,21 +69,24 @@
             <div class="inner-section">
                 <div class="ui segments panel">
                     <div class="ui segment panel-header">
-                        <p class="bold">Recent Episodes</p>
+                        <p class="bold">Recent Packages</p>
                     </div>
                     <div class="ui secondary segment panel-content">
-                        <div class="ui attached segment listings">
-                            <div class="topla">
-                                <img class="ui avatar image remove-circle" src="https://d12xoj7p9moygp.cloudfront.net/favicon/favicon-128.png" alt="">
-                                <span class="text">This segment is attached on both sides</span>
-                                <span class="right-floated day">5 day ago</span>
+                        <div v-if="loading">
+                            <div class="ui attached segment loading"><br></div>
+                        </div>
+                        <div class="ui attached segment listings" v-for="package in recentPackages.slice(0, 5)" @click="showPage(package.packageName, package.id)">
+                            <div class="topla" >
+                                <img class="ui avatar image remove-circle" :src="package.server.icon" alt="">
+                                <span class="text">{{ package.packageName }}</span>
+                                <span class="right-floated day"><timeago :since="package.updated_at"></timeago></span>
                             </div>
-
                         </div>
                     </div>
                     <div class="ui panel-footer column">
                         <a class="removelink loadMoreBtn">
                             <i class="angle down icon light" style="font-size:20px;margin:0 auto"></i>
+                            <!-- TODO: create recent packages section for recent packages -->
                         </a>
                     </div>
                 </div>
@@ -243,6 +218,7 @@
 
 </div>
 </div>
+</div>
 </template>
 
 <script>
@@ -257,9 +233,12 @@ export default {
       packageName: store.state.package.name,
       packageId: null,
       packages: [],
+      popularPackages: null,
+      recentPackages: null,
       search_key: "",
       showCommandLine: false,
-      store: null
+      store: null,
+      loading: true
     };
   },
 
@@ -280,11 +259,37 @@ export default {
   },
   mounted: function() {
     // this.store = store;
-    this.getPackages();
+    this.getPopular();
+    this.getRecent();
     this.countPageNumber;
   },
 
   methods: {
+    getPopular: function() {
+      var url = "/api/packages/?ordering=-download_count";
+      axios
+        .get(url)
+        .then(response => {
+          this.popularPackages = response.data.results;
+          this.loading = false;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
+    getRecent: function() {
+      var url = "/api/packages/?ordering=-created_at";
+      axios
+        .get(url)
+        .then(response => {
+          this.recentPackages = response.data.results;
+          this.loading = false;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     getPackages: function(url = "/api/packages") {
       axios
         .get(url)

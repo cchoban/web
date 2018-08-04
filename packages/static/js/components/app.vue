@@ -27,15 +27,7 @@
 
                     <search-package></search-package>
 
-                    <div class="buttons column">
-                        <div class="bttns menu">
-                            <a class="ui button loginBtn">
-                                <i class="user circle icon"></i>
-                                <span @click="test">qwe</span>
-                            </a>
-                        </div>
-
-                    </div>
+                    <login></login>
                 </div>
             </div>
     </div>
