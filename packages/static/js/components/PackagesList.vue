@@ -180,20 +180,7 @@
                     </div>
                 </div>
             </div>
-<!-- <div v-else>
-  <div class="alert alert-info">
-      No packages found <b v-if="search_key">{{ search_key }}</b>
-  </div>
-</div> -->
 
-
-
-
-<div aria-label="Pagination Navigation" role="navigation" class="ui pagination pointing secondary menu">
-  <a class="item" v-if="packages.previous != null" @click="getPackages(previousUrl)">⟨</a>
-  <a class="item" v-for="(num, pages) in countPageNumber" @click="getPackages('http://localhost:8000/api/packages/?limit=10&offset='+num)">{{ pages }}</a>
-  <a class="item" v-if="packages.next != null" @click="getPackages(nextUrl)">⟩</a>
-</div>
 
 </div>
 </div>
