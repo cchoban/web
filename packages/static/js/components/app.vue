@@ -15,11 +15,11 @@
                             <i class="angle right icon"></i>
                         </div>
 
-                        <div class="homeBtn bttns">
+                        <div class="homeBtn bttns" @click="refresh">
                             <i class="redo icon"></i>
                         </div>
 
-                        <div class="reloadBtn bttns">
+                        <div class="reloadBtn bttns" @click="goHome">
                             <i class="home icon"></i>
                         </div>
                     </div>
@@ -58,6 +58,19 @@ export default {
       history.forward();
     },
 
+    goHome: function() {
+      if (this.onPackagePage()) {
+        store.state.isPage = false;
+        history.pushState(null, null, "/packages");
+      } else {
+        window.location.href = "/packages";
+      }
+    },
+
+    refresh: function() {
+      window.location.reload();
+    },
+
     onPackagePage: function() {
       if (store.state.isPage == true) {
         return true;
@@ -85,7 +98,7 @@ export default {
 </script>
 
 <style type="scss" scoped>
-    .push {
-        margin-bottom:50px;
-    }
+.push {
+  margin-bottom: 50px;
+}
 </style>
