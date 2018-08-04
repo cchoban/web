@@ -10,6 +10,7 @@ from django.urls import reverse
 from .forms import LoginForm, RegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
@@ -22,7 +23,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.views import APIView
 
-
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 def index(request):
 
     context = {
@@ -30,7 +31,6 @@ def index(request):
     }
 
     return render(request, "index.html", context)
-
 
 def register_view(request):
     form = RegisterForm(request.POST or None)
@@ -78,6 +78,64 @@ def getPackage(request, packageName):
     }
     return render(request, "single.html", context)
 
+class LoginView(TemplateView):
+    def get(self, request):
+        context = {
+            "form": LoginForm
+        }
+        return render(request, 'auth/login.html', context)
+
+    def post(self, request):
+        form = AuthenticationForm(None, request.POST)
+        response_data = {}
+
+
+        if request.user.is_authenticated:
+            return self.__returnMessage(request, False, "You're already logged in!")
+
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            try_login = login(request, user)
+            return self.__returnMessage(request, True, 'Successfully logged in, you\'ll be redirected soon')
+        else:
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            if not username or not password:
+                return self.__returnMessage(request, False, 'You have empty field(s). Please fill them if you want to contiune')
+
+            errors = []
+            for i in form.errors.get('__all__'):
+                errors.append(i)
+
+            errors = '\n'.join(errors)
+            return self.__returnMessage(request, False, errors)
+
+        if request.is_ajax():
+            return self.__returnMessage(request, True, "tamam")
+        else:
+            response_data['form'] = form
+            return render(request, 'auth/login.html', response_data)
+
+
+    def __returnMessage(self, request, status, message):
+        if request.is_ajax():
+            return JsonResponse({
+                "status": status,
+                "message": message
+            })
+        else:
+            context = {
+                "message": message
+            }
+            if status:
+                context["success"] = True
+            else:
+                context["error"] = True
+
+            print(context)
+            return render(request, 'auth/login.html', context)
 
 class AccountView(TemplateView):
     '''
