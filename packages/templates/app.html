@@ -33,10 +33,9 @@
             username: "{{ user.username }}",
             profilePicture: "{{ userPicture }}"
         };
-
-        console.log(user_preferences)
         {% else %}
         var logged_in = false;
+        var user_preferences = {};
         {% endif %}
     </script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
