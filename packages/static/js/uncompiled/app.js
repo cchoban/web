@@ -30,6 +30,7 @@ Vue.component('installCommand', require('../components/installCommandLine.vue'))
 Vue.component('apikey', require('../components/api_key.vue'));
 Vue.component('search-package', require('../components/Search.vue'));
 Vue.component('login', require('../components/Login.vue'));
+Vue.component('userAccount', require('../components/userAccount.vue'));
 Vue.component('app', require('../components/app.vue'));
 
 
@@ -60,7 +61,8 @@ window.store = new Vuex.Store({
     },
     history: [],
     reload: true,
-    logged_in: false
+    user: user_preferences,
+    logged_in: logged_in
   },
   mutations: {
     logged_in: function (state, isit = false) {
@@ -68,6 +70,7 @@ window.store = new Vuex.Store({
     }
   }
 })
+
 
 
 const app = new Vue({

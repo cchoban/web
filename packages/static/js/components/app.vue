@@ -26,10 +26,14 @@
 
 
                     <search-package></search-package>
+                    <login v-if="!logged_in"></login>
+                    <div v-else>
+                      <userAccount></userAccount>
+                    </div>
 
-                    <login></login>
                 </div>
             </div>
+
     </div>
 </template>
 
@@ -37,7 +41,7 @@
 export default {
   data: function() {
     return {
-      //
+      logged_in: store.state.logged_in
     };
   },
   mounted: function() {
