@@ -26,8 +26,10 @@ from rest_framework.views import APIView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 def index(request):
 
+    email = request.user.email if request.user.is_authenticated else ""
     context = {
-        "maxEntry": settings.REST_FRAMEWORK["PAGE_SIZE"]
+        "maxEntry": settings.REST_FRAMEWORK["PAGE_SIZE"],
+        "userPicture": get_gravatar_url(email, size=650)
     }
 
     return render(request, "index.html", context)
