@@ -158,7 +158,7 @@
                 <div class="inner-section">
                     <div class="ui segments panel">
                         <div class="ui segment panel-header">
-                            <p class="bold">Recent Articles</p>
+                            <p class="bold">Random Packages</p>
                         </div>
                         <div class="ui secondary segment panel-content">
                         <div v-if="loading">
@@ -199,9 +199,9 @@ export default {
       packageName: store.state.package.name,
       packageId: null,
       packages: [],
-      popularPackages: null,
-      recentPackages: null,
-      discoverPackages: null,
+      popularPackages: [],
+      recentPackages: [],
+      discoverPackages: [],
       search_key: "",
       showCommandLine: false,
       store: null,

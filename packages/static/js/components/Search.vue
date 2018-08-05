@@ -17,9 +17,8 @@ export default {
       store: null
     };
   },
-  mounted: function() {
+  beforeMount: function () {
     this.store = store;
-    console.log(this.store);
   },
   methods: {
     getPackages: function() {
