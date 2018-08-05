@@ -53,12 +53,18 @@ export default {
         store.state.isPage = false;
         history.pushState(null, null, "/packages");
       } else {
-        history.back();
+        if (this.isPackagePage()) {
+          store.state.isPage = true;
+        }else {
+          history.back();
+        }
       }
     },
 
     goForward: function() {
-      store.state.isPage = true;
+      if(this.isPackagePage()){
+        store.state.isPage = true;
+      }
       history.forward();
     },
 
@@ -85,17 +91,18 @@ export default {
 
     isPackagePage: function() {
       var urlToGoBack = store.state.history[store.state.history.length - 2];
-
       if (urlToGoBack) {
         store.state.isPage = true;
         return true;
       } else {
         var urlToGoBack = store.state.history[store.state.history.length - 1];
-        store.state.isPage = true;
-        return true;
+        if(urlToGoBack){
+          store.state.isPage = true;
+          return true;
+        }
+        return false
       }
 
-      history.back();
     }
   }
 };
