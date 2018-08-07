@@ -17,7 +17,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend, )
     filter_fields = ['category']
     ordering_fields = ('created_at', 'updated_at', 'download_count', )
-    search_fields = ("packageName", "category",)
+    search_fields = ("packageName",)
     http_method_names = ['get']
 
     # def create(self, request):
