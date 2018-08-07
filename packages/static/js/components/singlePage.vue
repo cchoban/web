@@ -23,6 +23,11 @@
             <div class="ui segment">
               <p>Published by: {{ package.user_name }}</p>
             </div>
+            <div class="ui segment" v-if="package.category_name">
+              <p>Category:
+                <a :href="category_url(package.category_name)"> {{ package.category_name }}</a>  
+              </p>
+            </div>
             <div class="ui segment">
               <p>
                 <installCommand :packagename="package.packageName"></installCommand>
@@ -31,7 +36,7 @@
           </div>
         </div>
 
-        <div class="ui five wide column left floated">
+        <div class="ui twelve wide column left floated">
           <button class="ui positive button" @click.prevent="showIcerik('install')">
             Insallation Script
           </button>
@@ -107,6 +112,9 @@ export default {
     pushState() {
       store.state.history.push(this.packagename);
       history.pushState(null, null, "/packages/" + this.packagename);
+    },
+    category_url: function (category_name) {
+      return '/packages/category/'+Vue.options.filters.slugify(category_name)
     }
   }
 };
@@ -116,6 +124,6 @@ export default {
 .content {
   width: 59%;
   float: right;
-  margin-bottom:50px!important;
+  margin-bottom: 50px !important;
 }
 </style>

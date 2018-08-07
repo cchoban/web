@@ -192,11 +192,6 @@
 <script>
 const slugify = require("slugify");
 export default {
-  filters: {
-    slugify: function(str) {
-      return slugify(str).toLowerCase();
-    }
-  },
   props: ["maxentry"],
   data: function() {
     return {
@@ -325,10 +320,8 @@ export default {
       return sourceArray;
     },
     category_url: function(category_name) {
-      if (category_name) {
-        var slugged = this.$options.filters.slugify(category_name);
-        return "/packages/category/" + slugged;
-      }
+      var slugged = Vue.options.filters.slugify(category_name);
+      return "/packages/category/" + slugged;
     }
   }
 };
