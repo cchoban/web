@@ -7,8 +7,8 @@
 
         <div class="ui content twelve wide column right floated">
           <label class="ui green label">Download count: 0</label>
-          <label class="ui gray label">Last update: 0</label>
-          <label class="ui blue label">Submitted at: 0</label>
+          <label class="ui gray label">Last update: <timeago :since="package.updated_at"></timeago> </label>
+          <label class="ui blue label">Submitted at: <timeago :since="package.created_at"></timeago></label>
 
           <div class="ui segments">
             <div class="ui segment">
@@ -21,7 +21,7 @@
               <p>Version: {{ package.packageArgs.version }}</p>
             </div>
             <div class="ui segment">
-              <p>Published by: {{ package.user }}</p>
+              <p>Published by: {{ package.user_name }}</p>
             </div>
             <div class="ui segment">
               <p>
