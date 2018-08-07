@@ -1,15 +1,18 @@
 from django.contrib import admin
-from .models import Package, SubmitPackage, Setting
+from .models import Package, SubmitPackage, Setting, Category
 from django.shortcuts import get_object_or_404
 
 admin.site.register(Package)
 admin.site.register(Setting)
+admin.site.register(Category)
+
 
 def make_published(self, request, queryset):
     package = queryset.all()
     for i in package:
         try:
-            packageExists = Package.objects.filter(packageName=i.packageName).exists()
+            packageExists = Package.objects.filter(
+                packageName=i.packageName).exists()
 
             if not packageExists:
                 Package.objects.create(

@@ -3,7 +3,7 @@ import os
 import json
 from api import helpers as api_helpers
 from . import helpers
-from api.models import Package, Setting
+from api.models import Package, Setting, Category
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse, Http404
 from django.urls import reverse
@@ -16,6 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from django_gravatar.helpers import get_gravatar_url, has_gravatar, get_gravatar_profile_url, calculate_gravatar_hash
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 
 from rest_framework.authentication import TokenAuthentication
@@ -23,7 +24,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.views import APIView
 
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
 def index(request):
 
     email = request.user.email if request.user.is_authenticated else ""
@@ -34,6 +35,18 @@ def index(request):
 
     return render(request, "index.html", context)
 
+def category_index(request, category_name):
+    category = get_object_or_404(Category, slug=category_name)
+    packages = Package.objects.filter(category=category)
+
+    context = {
+        "category": category,
+        "packages": packages,
+        "catname": category.name
+    }
+    return render(request, "category_page.html", context)
+
+    return packages
 def register_view(request):
     form = RegisterForm(request.POST or None)
     context = {

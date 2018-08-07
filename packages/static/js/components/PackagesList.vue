@@ -26,7 +26,9 @@
                     <a class="featured-item" :style='"background-image: linear-gradient(to top, black, transparent), url("+package.server.icon+");"' @click="showPage(package.packageName, package.id)">
                         <h1> {{ package.packageName }} </h1>
                         <p></p>
-                        <label> {{ package.category }} </label>
+                        <label>
+                            <a :href="category_url(package.category_name)" class="removelink addCatUrl">{{ package.category_name }}</a> 
+                        </label>
                     </a>
                 </div>
             </div>
@@ -188,7 +190,13 @@
 </template>
 
 <script>
+const slugify = require("slugify");
 export default {
+  filters: {
+    slugify: function(str) {
+      return slugify(str).toLowerCase();
+    }
+  },
   props: ["maxentry"],
   data: function() {
     return {
@@ -230,6 +238,7 @@ export default {
     this.getRecent();
     this.getDiscover();
     this.countPageNumber;
+    $(".root").addClass("index");
   },
 
   methods: {
@@ -305,7 +314,6 @@ export default {
       this.store.state.isPage = false;
       history.pushState(null, null, "/packages");
     },
-
     shuffleArray: function(sourceArray) {
       for (var i = 0; i < sourceArray.length - 1; i++) {
         var j = i + Math.floor(Math.random() * (sourceArray.length - i));
@@ -315,6 +323,12 @@ export default {
         sourceArray[i] = temp;
       }
       return sourceArray;
+    },
+    category_url: function(category_name) {
+      if (category_name) {
+        var slugged = this.$options.filters.slugify(category_name);
+        return "/packages/category/" + slugged;
+      }
     }
   }
 };

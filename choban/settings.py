@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'packages',
     'rest_framework.authtoken',
     'crispy_forms',
-    'django_gravatar'
+    # 'crispy-forms-semantic-ui'
+    'django_gravatar',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -149,5 +151,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10
 }
-CRISPY_TEMPLATE_PACK = 'semantic-ui'
+CRISPY_TEMPLATE_PACK = 'uni_form'
 LOGIN_REDIRECT_URL = '/packages'

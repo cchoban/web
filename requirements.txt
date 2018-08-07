@@ -5,3 +5,5 @@ django-crispy-forms
 django-gravatar2
 gunicorn
 whitenoise
+django-filter
+Pillow

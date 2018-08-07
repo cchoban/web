@@ -1,0 +1,12 @@
+{% extends 'app.html' %}
+
+
+{% block title %}
+    {{ catname }}
+{% endblock title %}
+
+
+{% block 'app' %}
+    <category-page category="{{ category.id }}" category_name="{{ catname }}"></category-page>
+{% endblock %}
+
