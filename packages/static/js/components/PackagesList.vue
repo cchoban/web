@@ -13,27 +13,7 @@
 </div> -->
 
 <div v-if="!store.state.isPage">
-<div class="ui container fluid left">
-
-        <div class="featured-items twentyfivepx">
-            <div class="featured-header-text">
-                <h2>Featured today</h2>
-            </div>
-
-            <div class="featured-item-list">
-
-                <div v-for="package in popularPackages.slice(0, 10)" v-if="!loading">
-                    <a class="featured-item" :style='"background-image: linear-gradient(to top, black, transparent), url("+package.server.icon+");"' @click="showPage(package.packageName, package.id)">
-                        <h1> {{ package.packageName }} </h1>
-                        <p></p>
-                        <label>
-                            <a :href="category_url(package.category_name)" class="removelink addCatUrl">{{ package.category_name }}</a> 
-                        </label>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <PopularPackages></PopularPackages>
 
     <div class="ui three column container fluid content-section">
         <div class="section twentyfivepx column">
@@ -61,7 +41,7 @@
                         </div>
                     </div>
                     <div class="ui panel-footer column">
-                        <a class="removelink loadMoreBtn">
+                        <a class="removelink loadMoreBtn" href="popular-packages">
                             <i class="angle down icon light" style="font-size:20px;margin:0 auto"></i>
                             <!-- TODO: create popular packages section for recent packages -->
                         </a>
@@ -182,10 +162,8 @@
                     </div>
                 </div>
             </div>
-
-
-</div>
-</div>
+        </div>
+    </div>
 </div>
 </template>
 

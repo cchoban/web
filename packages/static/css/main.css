@@ -39,7 +39,7 @@ body {
 }
 
 .removelink {
-  color: #000 !important;
+  color: inherit !important;
   text-decoration: none;
 }
 
@@ -64,6 +64,7 @@ body {
   float: left;
   margin-top: 20px;
   min-width: 161px;
+  cursor: pointer;
 }
 
 .header-navbar .buttons .bttns {
@@ -441,19 +442,18 @@ body {
           box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.06), 0 2px 7px 0 rgba(0, 0, 0, 0.05);
 }
 
-.content .posts .post .header-section .title {
-  float: right;
-}
-
 .content .posts .post .header-section .title h2 {
   font-weight: 600;
   margin-bottom: 0;
   margin-top: 5px;
-  margin-left: 10px;
-  overflow: hidden;
+  margin-left: 83px;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
+}
+
+.content .posts .post .header-section .title h2 a {
+  color: initial !important;
 }
 
 .content .posts .post .header-section .author {

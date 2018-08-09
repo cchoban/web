@@ -46,7 +46,14 @@ def category_index(request, category_name):
     }
     return render(request, "category_page.html", context)
 
-    return packages
+
+def popular_index(request):
+    context = {
+        'maxentry': settings.REST_FRAMEWORK["PAGE_SIZE"]
+    }
+    return render(request, 'popular_page.html', context)
+
+
 def register_view(request):
     form = RegisterForm(request.POST or None)
     context = {

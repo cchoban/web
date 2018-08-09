@@ -23,7 +23,14 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers.common['X-CSRFToken'] = csrf_token;
 window.logged = is_logged()
 
-Vue.component('packages-list', require('../components/PackagesList.vue'))
+
+// PackageList.vue Components
+Vue.component('PopularPackages', require('../components/PackageListComponents/FeaturedToday.vue'));
+Vue.component('Pagination', require('../components/PackageListComponents/Pagination.vue'))
+
+// Index
+Vue.component('popular-page', require('../components/SinglePage/PopularPackages.vue'))
+Vue.component('packages-list', require('../components/PackagesList.vue'));
 Vue.component('package-page', require('../components/singlePage.vue'));
 Vue.component('category-page', require('../components/SinglePage/CategoryPage.vue'));
 
@@ -59,13 +66,14 @@ window.store = new Vuex.Store({
     search_key: null,
     isPage: false,
     package: {
-      name:"",
+      name: "",
       id: null
     },
     history: [],
     reload: true,
     user: user_preferences,
-    logged_in: logged_in
+    logged_in: logged_in,
+    loading: true
   },
   mutations: {
     logged_in: function (state, isit = false) {
