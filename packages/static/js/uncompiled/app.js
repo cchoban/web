@@ -26,7 +26,9 @@ window.logged = is_logged()
 
 // PackageList.vue Components
 Vue.component('PopularPackages', require('../components/PackageListComponents/FeaturedToday.vue'));
+Vue.component('PackagesSection', require('../components/PackageListComponents/PackagesSection.vue'));
 Vue.component('Pagination', require('../components/PackageListComponents/Pagination.vue'))
+
 
 // Index
 Vue.component('popular-page', require('../components/SinglePage/PopularPackages.vue'))
