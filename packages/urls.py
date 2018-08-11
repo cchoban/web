@@ -14,14 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import index, getPackage, package_list, is_logged, category_index, popular_index
+from .views import index, getPackage, package_list, is_logged, category_index, popular_index, ListAllPackages
 from django.conf import settings
 from django.conf.urls.static import static
 
 
 urlpatterns = [
     path('/', index, name="PackagesPage"),
-    path('/popular-packages', popular_index, name="PopularPackages"),
+    path('/all', ListAllPackages, name="AllPackages"),
+    path('/popular', popular_index, name="PopularPackages"),
     path('/category/<slug:category_name>',  category_index, name="CategoryPage"),
     path("/repo", package_list),
     path('/<slug:packageName>', getPackage, name="getPackage")

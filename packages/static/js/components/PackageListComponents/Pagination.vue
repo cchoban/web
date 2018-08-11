@@ -1,14 +1,14 @@
 <template>
   <div aria-label="Pagination Navigation" role="navigation" class="ui pagination pointing secondary menu">
     <a class="item" v-if="previousUrl" @click="getPackages(previousUrl)">⟨</a>
-    <a class="item" :class="{'active': pages == currentPage}" v-for="(num, pages) in countPageNumber" @click="getPackages('http://localhost:8000/api/packages/?limit=10&offset='+num+'&ordering=-download-count', pages)">{{ pages }}</a>
+    <a class="item" :class="{'active': pages == currentPage}" v-for="(num, pages) in countPageNumber" @click="getPackages('http://localhost:8000/api/packages/?limit=10&offset='+num+extra_queries, pages)">{{ pages }}</a>
     <a class="item" v-if="nextUrl" @click="getPackages(nextUrl)">⟩</a>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["maxentry"],
+  props: ["maxentry", "extra_queries"],
   data: function() {
     return {
       store: null,
@@ -17,7 +17,8 @@ export default {
       previousUrl: null,
       count: null,
       currentPage: 1,
-      offset: null
+      offset: null,
+      request_url: ""
     };
   },
   beforeMount: function() {
@@ -58,7 +59,7 @@ export default {
           this.store.state.package_page.nextUrl = response.data.results.next;
           this.store.state.package_page.previousUrl =
             response.data.results.previous;
-          this.pushState(pageNumber)
+          this.pushState(pageNumber);
         })
         .catch(response => {
           console.log("error");

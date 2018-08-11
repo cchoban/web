@@ -4,11 +4,11 @@
         <br>
     </div>
     <div v-else>
-        <Pagination :maxentry="maxentry" extra_queries="&ordering=-download_count"></Pagination>
+        <Pagination :maxentry="maxentry" request_url="http://localhost:8000/api/packages/?limit=10&offset=10'"></Pagination>
         <table class="ui table ">
             <thead>
                 <tr>
-                    <th>Popular packages</th>
+                    <th>Packages</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,48 +36,32 @@ export default {
   props: ["maxentry"],
   data: function() {
     return {
-      packages: [],
-      nextUrl: null,
-      previousUrl: null,
-      image: "",
-      store: null,
-      count: null
+      store: null
     };
   },
   beforeMount: function() {
     this.store = store;
-    $(".root").addClass("index");
   },
   mounted: function() {
-    this.grabPackages();
+    this.getPackages();
   },
-
   methods: {
-    grabPackages: function() {
-      var url = "/api/packages/?ordering=-download_count";
-      axios.get(url).then(response => {
-        this.packages = response.data.results;
-        this.count = response.data.count;
-        this.selectRandomImage();
-        this.store.state.loading = false;
-        this.store.state.package_page.packages = response.data.results;
-        this.store.state.package_page.count = response.data.count;
-        this.store.state.package_page.nextUrl = response.data.next;
-        this.store.state.package_page.previousUrl = response.data.previous;
-      })
-      .catch(response => {
-          console.log('error')
-      });
-    },
-    selectRandomImage: function() {
-      var i;
-      var rand = this.packages[this.getRandomInt(0, this.packages.length)];
-      if (rand) {
-        this.image = rand.server.icon;
-      }
-    },
-    getRandomInt: function(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
+    getPackages: function() {
+      const url = "/api/packages/";
+      axios
+        .get(url)
+        .then(response => {
+          this.packages = response.data.results;
+          this.count = response.data.count;
+          this.store.state.loading = false;
+          this.store.state.package_page.packages = response.data.results;
+          this.store.state.package_page.count = response.data.count;
+          this.store.state.package_page.nextUrl = response.data.next;
+          this.store.state.package_page.previousUrl = response.data.previous;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
@@ -91,6 +75,6 @@ export default {
 }
 
 .package-specifics {
-    width: 86%;
+  width: 86%;
 }
 </style>

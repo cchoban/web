@@ -54,6 +54,12 @@ def popular_index(request):
     return render(request, 'popular_page.html', context)
 
 
+def ListAllPackages(request):
+    context = {
+        'maxentry': settings.REST_FRAMEWORK["PAGE_SIZE"]
+    }
+
+    return render(request, 'packages_page.html', context)
 def register_view(request):
     form = RegisterForm(request.POST or None)
     context = {
