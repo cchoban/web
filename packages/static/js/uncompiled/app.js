@@ -35,6 +35,7 @@ Vue.component('popular-page', require('../components/SinglePage/PopularPackages.
 Vue.component('packages-list', require('../components/PackagesList.vue'));
 Vue.component('package-page', require('../components/singlePage.vue'));
 Vue.component('category-page', require('../components/SinglePage/CategoryPage.vue'));
+Vue.component('Packages', require('../components/SinglePage/Packages.vue'));
 
 ;
 Vue.component('readMore', require('../components/readMore.vue'));

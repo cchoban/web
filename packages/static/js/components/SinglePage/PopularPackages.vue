@@ -5,7 +5,7 @@
     </div>
     <div v-else>
         <Pagination :maxentry="maxentry" extra_queries="&ordering=-download_count"></Pagination>
-        <table class="ui table ">
+        <table class="ui table">
             <thead>
                 <tr>
                     <th>Popular packages</th>
