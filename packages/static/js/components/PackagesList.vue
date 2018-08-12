@@ -1,16 +1,7 @@
 <template>
 
 <div>
-
-<button class="ui positive button" @click="goBack" v-if="store.state.isPage" style="width:100%;margin:20px"> Go back</button>
 <package-page :packagename="store.state.package.name" :packageid="store.state.package.id" v-if="store.state.isPage"></package-page>
-
-<!-- <div class="background-gray switch-command">
-    <div class="ui toggle checkbox">
-      <input name="public" type="checkbox" v-model="showCommandLine">
-      <label>Enable fast installation</label>
-    </div>
-</div> -->
 
 <div v-if="!store.state.isPage">
     <PopularPackages></PopularPackages>
