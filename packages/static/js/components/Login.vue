@@ -66,6 +66,9 @@ export default {
             if (response.data.status) {
               swal("Yess!", response.data.message, "success");
               store.commit('logged_in', true);
+              setTimeout(() => {
+                window.location.href = '/packages'
+              }, 2000);
             } else {
               swal("Oops!", response.data.message, "error");
             }
