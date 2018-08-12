@@ -1,7 +1,7 @@
 <template>
   <div aria-label="Pagination Navigation" role="navigation" class="ui pagination pointing secondary menu">
     <a class="item" v-if="previousUrl" @click="getPackages(previousUrl)">⟨</a>
-    <a class="item" :class="{'active': pages == currentPage}" v-for="(num, pages) in countPageNumber" @click="getPackages('http://localhost:8000/api/packages/?limit=10&offset='+num+extra_queries, pages)">{{ pages }}</a>
+    <a class="item" :class="{'active': pages == currentPage}" v-for="(num, pages) in countPageNumber" @click="getPackages('http://localhost:8000/api/packages/?limit='+maxentry+'&offset='+num+extra_queries, pages)">{{ pages }}</a>
     <a class="item" v-if="nextUrl" @click="getPackages(nextUrl)">⟩</a>
   </div>
 </template>

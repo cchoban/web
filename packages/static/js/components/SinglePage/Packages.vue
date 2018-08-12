@@ -4,7 +4,7 @@
         <br>
     </div>
     <div v-else>
-        <Pagination :maxentry="maxentry" request_url="http://localhost:8000/api/packages/?limit=10&offset=10'"></Pagination>
+        <Pagination :maxentry="maxentry" extra_queries=""></Pagination>
         <table class="ui table ">
             <thead>
                 <tr>
