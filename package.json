@@ -12,9 +12,7 @@
     "devDependencies": {
         "cross-env": "^5.1",
         "laravel-mix": "^2.0",
-        "lodash": "^4.17.4"
-    },
-    "dependencies": {
+        "lodash": "^4.17.4",
         "axios": "^0.17",
         "date-fns": "^1.29.0",
         "highlight.js": "^9.12.0",
