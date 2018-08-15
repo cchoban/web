@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="ui panel-footer column">
-                        <a class="removelink loadMoreBtn" href="popular-packages">
+                        <a class="removelink loadMoreBtn" href="popular">
                             <i class="angle down icon light" style="font-size:20px;margin:0 auto"></i>
                             <!-- TODO: create popular packages section for recent packages -->
                         </a>
