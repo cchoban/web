@@ -43,6 +43,7 @@
                             <div class="ui attached segment loading"><br></div>
                         </div>
                         <div class="ui attached segment listings" v-for="package in recentPackages.slice(0, 5)" @click="showPage(package.packageName, package.id)">
+
                             <div class="topla" >
                                 <img class="ui avatar image remove-circle" :src="package.server.icon" alt="">
                                 <span class="text">{{ package.packageName }}</span>
@@ -68,15 +69,19 @@ export default {
     return {
       popularPackages: [],
       recentPackages: [],
-      loading: true
+      loading: true,
+      store: null
     };
+  },
+  beforeMount() {
+    this.store = store;
   },
   mounted: function() {
     this.getPopular();
     this.getRecent();
   },
   methods: {
-    showPage: function() {
+    showPage: function(packageName, packageId) {
       this.packageName = packageName;
       store.state.package.name = packageName;
       store.state.package.id = packageId;
