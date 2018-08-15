@@ -18,17 +18,16 @@ from django.urls import path, include
 from .routers import router
 from packages import urls as packageUrls
 from packages.views import is_logged, register_view
-from django.contrib.auth.views import logout, login
-from packages.views import AccountTokenView, AccountView, LoginView
+from django.contrib.auth import logout, login
+from packages.views import AccountTokenView, AccountView, LoginView, logout_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls), name="api"),
-    path('packages', include(packageUrls)),
-    # path("login", login, {"template_name": "auth/login.html"}, name="LoginPage"),
+    path('packages', include(packageUrls), name="PackagesPage"),
     path("login", LoginView.as_view(), name="LoginPage"),
     path("register", register_view, name="RegisterPage"),
-    path('logout', logout, {'next_page': '/'}),
+    path('logout', logout_view, name="LogoutPage"),
     path('user/<slug:username>', AccountView.as_view(), name="AccountPage"),
     path('account/token', AccountTokenView.as_view(), name='TokenPage'),
 

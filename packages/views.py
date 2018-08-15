@@ -237,3 +237,9 @@ def is_logged(request):
         return JsonResponse({"auth": True})
     else:
         return JsonResponse({"auth": False})
+
+
+def logout_view(request):
+    if request.user.is_authenticated:
+         logout(request)
+    return redirect(reverse('PackagesPage'))
