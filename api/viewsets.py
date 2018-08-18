@@ -14,12 +14,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Package.objects.all()
     serializer_class = PackageSerializer
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend, )
+    filter_backends = (filters.SearchFilter,
+                       filters.OrderingFilter, DjangoFilterBackend, )
     filter_fields = ['category']
     ordering_fields = ('created_at', 'updated_at', 'download_count', )
     search_fields = ("packageName",)
     http_method_names = ['get']
-
 
     def retrieve(self, request, pk=None):
         downloading = self.request.query_params.get('download')
@@ -27,11 +27,16 @@ class ArticleViewSet(viewsets.ModelViewSet):
         serializer = PackageSerializer(package)
 
         if downloading == 'true':
-            package.download_count += 1
-            package.save()
+            if not self.request.session.get('downloaded'):
+                print('qwesdqwe')
+                self.request.session['downloaded'] = True
+                package.download_count += 1
+                package.save()
         else:
-            package.view_count += 1
-            package.save()
+            if not self.request.session.get('counted'):
+                self.request.session['counted'] = True
+                package.view_count += 1
+                package.save()
 
         return Response(serializer.data)
 
