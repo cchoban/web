@@ -28,6 +28,7 @@ class Package(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
     download_count = models.IntegerField(default=0)
+    view_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True, editable=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, editable=True, null=True)
 

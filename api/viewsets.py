@@ -20,20 +20,20 @@ class ArticleViewSet(viewsets.ModelViewSet):
     search_fields = ("packageName",)
     http_method_names = ['get']
 
-    # def create(self, request):
-    #     print('asdqwe')
-    # #     return False
-    # def retrieve(self, request, pk=None):
-    #     queryset = Package.objects.all()
-    #     package = get_object_or_404(Package, pk=pk)
-    #     serializer = PackageSerializer(package)
-    #     data = {
-    #         "user": package.user.username
-    #     }
 
-    #     new_data = {**serializer.data, **data}
+    def retrieve(self, request, pk=None):
+        downloading = self.request.query_params.get('download')
+        package = get_object_or_404(Package, pk=pk)
+        serializer = PackageSerializer(package)
 
-    #     return Response(new_data)
+        if downloading == 'true':
+            package.download_count += 1
+            package.save()
+        else:
+            package.view_count += 1
+            package.save()
+
+        return Response(serializer.data)
 
 
 class SubmitPackageViewSet(viewsets.ModelViewSet):
