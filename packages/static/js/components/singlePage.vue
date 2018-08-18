@@ -6,7 +6,8 @@
         </div>
 
         <div class="ui content twelve wide column right floated">
-          <label class="ui green label">Download count: 0</label>
+          <label class="ui green label">Download count: {{ package.download_count }}</label>
+          <label class="ui yellow label">View count: {{ package.view_count }}</label>
           <label class="ui gray label">Last update: <timeago :since="package.updated_at"></timeago> </label>
           <label class="ui blue label">Submitted at: <timeago :since="package.created_at"></timeago></label>
 
@@ -25,7 +26,7 @@
             </div>
             <div class="ui segment" v-if="package.category_name">
               <p>Category:
-                <a :href="category_url(package.category_name)"> {{ package.category_name }}</a>  
+                <a :href="category_url(package.category_name)"> {{ package.category_name }}</a>
               </p>
             </div>
             <div class="ui segment">
