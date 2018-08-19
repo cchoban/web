@@ -56,9 +56,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    # 'django.middleware.cache.UpdateCacheMiddleware',
-    # 'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.cache.FetchFromCacheMiddleware'
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
 ROOT_URLCONF = 'choban.urls'
@@ -90,10 +90,10 @@ WSGI_APPLICATION = 'choban.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django',
-        'USER': 'postgres',
-        'PASSWORD': '665200',
-        'HOST': 'postgres',
+        'NAME': 'dd0fcem2n8m70d',
+        'USER': 'julcdlotojaiha',
+        'PASSWORD': '6cfd5de09171efb526b20204c23ccb6b243d5816e763ba658607072da06a015e',
+        'HOST': 'ec2-54-217-250-0.eu-west-1.compute.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -144,7 +144,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_DIRS  = [
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "packages", "static")
 ]
 REST_FRAMEWORK = {
