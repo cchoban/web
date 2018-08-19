@@ -8,25 +8,37 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Package.objects.all()
     serializer_class = PackageSerializer
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (filters.SearchFilter,
+                       filters.OrderingFilter, DjangoFilterBackend, )
+    filter_fields = ['category']
+    ordering_fields = ('created_at', 'updated_at', 'download_count', )
     search_fields = ("packageName",)
+    http_method_names = ['get']
 
     def retrieve(self, request, pk=None):
-        queryset = Package.objects.all()
+        downloading = self.request.query_params.get('download')
         package = get_object_or_404(Package, pk=pk)
         serializer = PackageSerializer(package)
-        data = {
-            "user": package.user.username
-        }
 
-        new_data = {**serializer.data, **data}
+        if downloading == 'true':
+            if not self.request.session.get('downloaded'):
+                print('qwesdqwe')
+                self.request.session['downloaded'] = True
+                package.download_count += 1
+                package.save()
+        else:
+            if not self.request.session.get('counted'):
+                self.request.session['counted'] = True
+                package.view_count += 1
+                package.save()
 
-
-        return Response(new_data)
+        return Response(serializer.data)
 
 
 class SubmitPackageViewSet(viewsets.ModelViewSet):
@@ -44,20 +56,23 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
         if package_name != str(package).split(".")[0]:
             return Response({"error": "Could not accept your request."}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
-        packageExists = Package.objects.filter(packageName=package_name.lower())[:1].exists()
-        packageOwner = Package.objects.filter(packageName=package_name.lower(), user=self.request.user.id).exists()
+        packageExists = Package.objects.filter(
+            packageName=package_name.lower())[:1].exists()
+        packageOwner = Package.objects.filter(
+            packageName=package_name.lower(), user=self.request.user.id).exists()
 
-
-        submitPackages_packageOwner = SubmitPackage.objects.filter(packageName=package_name.lower(), user=self.request.user.id).exists()
-        submitPackageExists = SubmitPackage.objects.filter(packageName=package_name.lower())[:1].exists()
-
+        submitPackages_packageOwner = SubmitPackage.objects.filter(
+            packageName=package_name.lower(), user=self.request.user.id).exists()
+        submitPackageExists = SubmitPackage.objects.filter(
+            packageName=package_name.lower())[:1].exists()
 
         if packageExists and not packageOwner and not submitPackages_packageOwner:
             return Response({"error": "This package is already published."}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         if not submitPackageExists:
             if self.request.FILES["package"] and self.request.data.get("packageName"):
-                uploaded = helpers.handle_uploaded_files(self.request.FILES['package'])
+                uploaded = helpers.handle_uploaded_files(
+                    self.request.FILES['package'])
 
                 if not bool(uploaded["status"]):
                     return Response({"error": uploaded["message"]}, status=status.HTTP_406_NOT_ACCEPTABLE)
@@ -68,7 +83,8 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
                     if validated:
                         serializer.save(packageName=uploaded["packageArgs"]["packageName"].lower(),
                                         packageArgs=uploaded["packageArgs"],
-                                        packageUninstallArgs=uploaded["packageUninstallArgs"],
+                                        packageUninstallArgs=uploaded[
+                                            "packageUninstallArgs"],
                                         server=uploaded["server"],
                                         user=request.user
                                         )

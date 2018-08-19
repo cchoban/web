@@ -19,31 +19,16 @@ def createFolders():
     folders = ["uploads", "files"]
 
     for i in folders:
+        folder = os.path.join(i)
         try:
-            os.makedirs(os.path.join(i))
+            if not os.path.exists(folder):
+                os.makedirs(folder)
         except Exception as e:
             return True
 
 
-def unzip(packageName, zip):
-    folder = os.path.join("files", packageName)
-    print(folder)
-    try:
-        zf = zipfile.ZipFile(zip, "r")
-        zf.extractall(folder)
-        zf.close()
-    except OSError as e:
-        if e.errno == 17:
-            # Already exists
-            return True
-        print(e)
-
-
-def validatePackage(packageName):
-    return validate_package(packageName)
-
-
 def handle_uploaded_files(zipRequest):
+
     createFolders()
     write(zipRequest)
     withoutExt = str(zipRequest).split('.')[0]
@@ -51,6 +36,7 @@ def handle_uploaded_files(zipRequest):
     validate = validate_package(withoutExt)
     moveIconsToStatic(withoutExt)
     new_json = reDefineJson(withoutExt)
+
     if validate:
         version = check_package_version(new_json)
         if bool(version["status"]):
@@ -64,6 +50,21 @@ def handle_uploaded_files(zipRequest):
             "We could not validate you JSON file. Be sure you have generated file with the Choban Package Manager.")
 
 
+def unzip(packageName, zip):
+    folder = os.path.abspath(os.path.join("files", packageName))
+    try:
+        zf = zipfile.ZipFile(zip, "r")
+        zf.extractall(folder)
+        zf.close()
+    except Exception as e:
+        if e.errno == 17:
+            return True
+
+
+def validatePackage(packageName):
+    return validate_package(packageName)
+
+
 def write(zip):
     for chunk in zip.chunks():
         with open(os.path.join("uploads", str(zip)), "wb+") as f:
@@ -73,15 +74,13 @@ def write(zip):
 
 def cleanup(packageName):
     filesPath = os.path.join("files/", packageName)
-    uploadsPath = os.path.join("uploads/", packageName+".zip")
-
-    if os.path.exists(filesPath) and os.path.exists(uploadsPath):
-        try:
+    uploadsPath = os.path.join("uploads/")
+    try:
+        if os.path.exists(filesPath):
             rmtree(filesPath)
-            os.remove(uploadsPath)
-            os.removedirs(filesPath, uploadsPath)
-        except Exception as e:
-            return False
+            os.remove(filesPath)
+    except Exception as e:
+        return False
 
 
 def moveIconsToStatic(packageName):
@@ -89,7 +88,6 @@ def moveIconsToStatic(packageName):
     destPath = os.path.join("packages", "static",
                             "images", "packages", packageName)
     imageExtensions = ["png", "jpg", "jpeg", "svg"]
-
 
     for i in os.listdir(iconsPath):
         for ext in imageExtensions:
@@ -101,23 +99,17 @@ def moveIconsToStatic(packageName):
 
 def reDefineJson(packageName):
     validate = validate_package(packageName)
-    imagePath = os.path.join("packages", "static", "images", "packages", packageName)
+    imagePath = os.path.join("packages", "static",
+                             "images", "packages", packageName)
     imageExtensions = ["png", "jpg", "jpeg", "svg"]
     if validate:
-        validate.pop("server")
-
         for i in os.listdir(imagePath):
             for ext in imageExtensions:
                 if i.endswith(ext):
-                    new_json = {
-                        "server": {
-                            "icon":  "/static/images/packages/{0}/{1}".format(packageName, i)
-                        }
-                    }
+                    validate['server'][
+                        'icon'] = "/static/images/packages/{0}/{1}".format(packageName, i)
+                    return validate
 
-                    redefined_json = {**validate, **new_json}
-
-                    return redefined_json
 
 def validate_json(json_object):
     try:
@@ -125,13 +117,14 @@ def validate_json(json_object):
     except json.JSONDecodeError as e:
         return False
 
+
 def check_package_version(json_object):
     js = json_object
     package_name = js["packageArgs"]["packageName"]
     package_version = js["packageArgs"]["version"]
 
-    repo = Package.objects.filter(packageName=package_name) or SubmitPackage.objects.filter(packageName=package_name)
-
+    repo = Package.objects.filter(
+        packageName=package_name) or SubmitPackage.objects.filter(packageName=package_name)
 
     if repo.exists():
         repo_version = repo.get().packageArgs["version"]

@@ -1,0 +1,116 @@
+@mixin panel {
+    .panel {
+        border:0!important;
+        overflow: hidden;
+        .panel-header {
+            font-size:13px;
+        }
+
+        .panel-content {
+            background-color: #fff!important;
+            margin:0!important;
+            padding:0!important;
+            .listings {
+                border:0!important;
+                border-bottom:1px #eee solid!important;
+                overflow:hidden;
+                cursor: pointer;
+                .text {
+                    color:#000;
+                }
+
+                .topla {
+
+                    &:hover {
+                        margin-left:4px;
+                        transition: 200ms;
+                    }
+                }
+
+                img {
+                    width:16px;
+                    height: 16px;
+                }
+
+            }
+        }
+
+        .panel-footer {
+            background-color:#fff;
+            .loadMoreBtn {
+                margin-left: calc(100% - 50%);
+                cursor: pointer;
+                display: block;
+            }
+        }
+    }
+}
+
+
+@mixin posts {
+    .posts {
+        width: 63%;
+        overflow: scroll;
+        margin-top:30px;
+        .post {
+            margin-bottom:20px;
+
+            .header-section {
+                width:410px;
+                .image {
+                    float:left;
+                    img {
+                        width: 75px;
+                        height: 75px;
+                        border-radius: 8px;
+                        box-shadow: 0 1px 0 0 rgba(0,0,0,.06),0 2px 7px 0 rgba(0,0,0,.05);
+
+                    }
+                }
+
+                .title {
+                    h2 {
+                        font-weight: 600;
+                        margin-bottom: 0;
+                        margin-top: 5px;
+                        margin-left:83px;
+                        -o-text-overflow: ellipsis;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        width: 100%;
+
+                        a {
+                            color:initial!important;
+                        }
+                    }
+                }
+
+
+                .author {
+                    text-transform: uppercase;
+                    margin-left:9px;
+                    display:inline-block;
+                    font-size:9px;
+
+                    a {
+                        color:#44bc75!important;
+                    }
+
+                    .time {
+                        margin-left:10px;
+                        color:rgb(170, 170, 170);
+                    }
+                }
+            }
+
+            .description {
+                overflow: hidden;
+                p {
+                  margin-left:9px;
+                    margin-top:5px;
+                }
+            }
+
+        }
+    }
+}

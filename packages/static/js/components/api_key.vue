@@ -1,18 +1,23 @@
 <template>
-<div class="card">
-    <h5 class="card-header">API 2Key</h5>
-    <div class="card-body">
-      <h5 class="card-title">Grab your API key to push new packages!</h5>
-      <p class="card-text">Your API key provides you with a token that identifies you to the gallery. Keep this a secret. You can always regenerate your key at any time (invalidating previous keys) if your token is accidentally revealed. The You would pass your token like this: </p>
-      <label for="apikey">
-          Your API key is:
-      </label>
-      <br>
-      <input type="text" class='form-control' id='apikey' style="width: 350px; display:inline-block" disabled v-model="api_key"> <span v-html="copy_icon" @click="copy_api"></span>
-      <input type="hidden" id="copy-apikey" :value="api_key">
-      <br>
-      <br>
-      <a href="#" class="btn btn-primary" @click="generate_token">Grab new token</a>
+<div class="ui container ">
+    <div class="column">
+      <h4 class="ui top attached header">API 2Key</h4>
+      <div class="ui bottom attached segment">
+        <p>Grab your API key to push new packages!</p>
+        <p>Your API key provides you with a token that identifies you to the gallery. Keep this a secret. You can always regenerate your key at any time (invalidating previous keys) if your token is accidentally revealed. The You would pass your token like this: </p>
+      
+        <div class="ui form">
+          <label for="apikey">
+            Your API key is:
+          </label>
+          <br>
+          <input type="text" class='form-control' id='apikey' style="width: 350px; display:inline-block" disabled v-model="api_key"> <span v-html="copy_icon" @click="copy_api"></span>
+          <input type="hidden" id="copy-apikey" :value="api_key">
+          <br>
+          <br>
+          <a href="#" class="ui button" @click="generate_token">Grab new token</a>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -51,20 +56,22 @@ export default {
     },
 
     generate_token: function() {
-      var url = "token"
+      var url = "token";
       var bodyFormData = new FormData();
-      bodyFormData.set('generate_new_token', true)
-      axios.post(url, bodyFormData).then(response => {
-        if (response.data.status == false) {
-          swal("Oops!", response.data.message, "error");
-        } else {
-          this.api_key = response.data.key
-          swal("Yess!", response.data.message, "success");
-        }
-      }).catch(err => {
-        console.log(err)
-      })
-
+      bodyFormData.set("generate_new_token", true);
+      axios
+        .post(url, bodyFormData)
+        .then(response => {
+          if (response.data.status == false) {
+            swal("Oops!", response.data.message, "error");
+          } else {
+            this.api_key = response.data.key;
+            swal("Yess!", response.data.message, "success");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     copy_api: function() {
       let apikey = document.querySelector("#copy-apikey");

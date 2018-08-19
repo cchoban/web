@@ -24,3 +24,13 @@ Vue.directive('highlightjs', {
     })
   }
 })
+
+
+const slugify = require('slugify')
+Vue.filter('slugify', str => {
+  if (str) {
+    if (typeof str == 'string') {
+      return slugify(str).toLowerCase()
+    }
+  }
+})

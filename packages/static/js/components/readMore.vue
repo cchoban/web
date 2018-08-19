@@ -19,12 +19,9 @@ export default {
     },
     methods: {
         getPackageUrl(id){
+            store.state.isPage = true
             this.isPage = true
         }
     }
 }
 </script>
-
-<style>
-
-</style>

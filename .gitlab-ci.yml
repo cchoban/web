@@ -25,7 +25,7 @@ before_script:
   # Uncomment next line if your Django app needs a JS runtime:
 
   - apt-get update -q
-  - pip install -r req.txt
+  - pip install -r requirements.txt
   - curl -sL https://deb.nodesource.com/setup_8.x | bash -
   - apt-get install -y nodejs
   - npm install

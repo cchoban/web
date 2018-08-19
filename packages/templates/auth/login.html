@@ -8,39 +8,45 @@
 
 
 {% block 'app' %}
-    {% if success %}
-        <div class="alert alert-success">
-            {{ message }}
-        </div>
-        {% if redirect %}
-            <script>
-                setTimeout(function(){
-                    window.location.href = "{% url 'PackagesPage' %}"
-                }, 3000)
-            </script>
-        {% endif %}
-    {% endif %}
-    {% if error %}
-        <div class="alert alert-danger">
-            <p>{{ message }}</p>
-        </div>
-    {% endif %}
 
-    <div class="card" >
-        <div class="card-body">
-          <h5 class="card-title">Login to Choban</h5>
-          <p class="card-text">
-              Not registered yet? <a href="{% url 'RegisterPage' %}"> Register here</a>
+
+    <div class="ui container">
+    <div class="ui segment">
+          <h5 class="ui header">Login to Choban</h5>
+          <p>
+              Not registered yet? <a class="ui teal tag label" href="{% url 'RegisterPage' %}">Register here</a>
           </p>
-            <p class="card-text">
-            <form action="" method="POST">
+            <p>
+            {% if success %}
+                <div class="ui possitive message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        We're sorry we can't process your request.
+                    </div>
+                    <p>{{ message }}</p>
+                </div>
+            {% if redirect %}
+                <script>
+                    setTimeout(function () {
+                        window.location.href = "{% url 'PackagesPage' %}"
+                    }, 3000)
+                </script> {% endif %} {% endif %} {% if error %}
+                <div class="ui negative message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        We're sorry we can't process your request.
+                    </div>
+                    <p>{{ message }}</p>
+                </div>
+            {% endif %}
+            <form action="" method="POST" class="ui form">
                 {% csrf_token %}
                 {{ form|crispy }}
 
             </p>
-            <button type="submit" class="btn btn-success"> Login </button>
+            <button type="submit" class="ui button positive"> Login </button>
         </form>
         </div>
-      </div>
+        </div>
 {% endblock %}
 

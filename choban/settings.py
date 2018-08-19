@@ -25,7 +25,7 @@ SECRET_KEY = 'cilm0^9**l(b+jo927ptjm2+%fx=jxgi66a%3*c*31rg2^s0z8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["choban.herokuapp.com", "localhost"]
+ALLOWED_HOSTS = ["choban.herokuapp.com", "localhost", "*"]
 
 
 # Application definition
@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'packages',
     'rest_framework.authtoken',
     'crispy_forms',
-    'django_gravatar'
+    # 'crispy-forms-semantic-ui'
+    'django_gravatar',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -88,10 +90,10 @@ WSGI_APPLICATION = 'choban.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dd0fcem2n8m70d',
-        'USER': 'julcdlotojaiha',
-        'PASSWORD': '6cfd5de09171efb526b20204c23ccb6b243d5816e763ba658607072da06a015e',
-        'HOST': 'ec2-54-217-250-0.eu-west-1.compute.amazonaws.com',
+        'NAME': 'django',
+        'USER': 'postgres',
+        'PASSWORD': '665200',
+        'HOST': 'postgres',
         'PORT': '5432',
     }
 }
@@ -149,5 +151,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10
 }
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = 'uni_form'
 LOGIN_REDIRECT_URL = '/packages'
