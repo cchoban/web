@@ -5,6 +5,7 @@ import VueTimeago from 'vue-timeago';
 
 
 function is_logged() {
+    alert('wqe')
   axios
     .get("/islogged")
     .then(response => {
