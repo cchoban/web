@@ -91,7 +91,7 @@ env.bak/
 venv.bak/
 files/
 uploads/
-
+packages/static/images/packages/
 # Spyder project settings
 .spyderproject
 .spyproject
