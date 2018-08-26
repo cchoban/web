@@ -24,6 +24,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.views import APIView
 
+from ratelimit.decorators import ratelimit
+
 
 def index(request):
 
@@ -183,11 +185,13 @@ class AccountView(TemplateView):
         context["user_packages"] = user_packages
         return render(request, 'auth/account.html', context)
 
+
 class AccountTokenView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         context = {}
         return render(request, 'auth/get_token.html', context)
 
+    @ratelimit(key="ip", rate="2/d", block=True)
     def post(self, request):
         token = Token.objects.filter(user=request.user)
         if token.exists() and not request.POST.get('generate_new_token'):
@@ -200,8 +204,6 @@ class AccountTokenView(LoginRequiredMixin, TemplateView):
         create_token = Token.objects.create(user=request.user)
         if create_token:
             return JsonResponse({"status": True, "message": "You successfully generated your new key!", "key": create_token.key})
-
-
 
 @api_view(['GET'])
 # @authentication_classes((TokenAuthentication,))
