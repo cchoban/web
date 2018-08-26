@@ -130,5 +130,7 @@ def check_package_version(json_object):
         repo_version = repo.get().packageArgs["version"]
         if repo_version >= package_version:
             return {"status": False, "message": "We have never version of this package on system."}
+        else:
+            return {"status": True, "message": "Update on progress"}
     else:
-        return {"status": True, "message": "Sucess"}
+        return {"status": True, "message": "Success"}

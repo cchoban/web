@@ -12,9 +12,9 @@ def make_published(self, request, queryset):
     for i in package:
         try:
             packageExists = Package.objects.filter(
-                packageName=i.packageName).exists()
+                packageName=i.packageName)
 
-            if not packageExists:
+            if not packageExists.exists():
                 Package.objects.create(
                     packageName=i.packageName,
                     packageArgs=i.packageArgs,
@@ -29,8 +29,13 @@ def make_published(self, request, queryset):
 
                 self.message_user(request, message_bit)
             else:
-                message_bit = "This package is already approved!"
-                self.message_user(request, message_bit, "error")
+                package = packageExists[0]
+                message_bit = "Updated version from '{}' to '{}' of package '{}'".format(
+                    package.packageArgs['version'], i.packageArgs['version'], i.packageName)
+                packageExists.update(
+                    packageArgs=i.packageArgs, packageUninstallArgs=i.packageUninstallArgs, server=i.server)
+                queryset.delete()
+                self.message_user(request, message_bit, "success")
 
         except Exception as e:
             pass

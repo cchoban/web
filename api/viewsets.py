@@ -28,7 +28,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         if downloading == 'true':
             if not self.request.session.get('downloaded'):
-                print('qwesdqwe')
                 self.request.session['downloaded'] = True
                 package.download_count += 1
                 package.save()
@@ -63,11 +62,12 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
 
         submitPackages_packageOwner = SubmitPackage.objects.filter(
             packageName=package_name.lower(), user=self.request.user.id).exists()
+
         submitPackageExists = SubmitPackage.objects.filter(
             packageName=package_name.lower())[:1].exists()
 
-        if packageExists and not packageOwner and not submitPackages_packageOwner:
-            return Response({"error": "This package is already published."}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        # if packageExists and not packageOwner and not submitPackages_packageOwner:
+        #     return Response({"error": "This package is already published."}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         if not submitPackageExists:
             if self.request.FILES["package"] and self.request.data.get("packageName"):
