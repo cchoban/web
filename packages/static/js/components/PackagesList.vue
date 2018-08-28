@@ -2,6 +2,7 @@
 
 <div>
 <package-page :packagename="store.state.package.name" :packageid="store.state.package.id" v-if="store.state.isPage"></package-page>
+<Packages v-if="store.state.search_key.length > 0"></Packages>
 
 <div v-if="!store.state.isPage">
     <PopularPackages></PopularPackages>
@@ -114,8 +115,6 @@ export default {
       packageId: null,
       packages: [],
       discoverPackages: [],
-      search_key: "",
-      showCommandLine: false,
       store: null,
       loading: true
     };

@@ -20,15 +20,15 @@ export default {
   },
   methods: {
     getPackages: function() {
-      var url = "/api/packages/?search=" + store.state.search_key;
+      var url = "/api/packages/?search=" + this.store.state.search_key;
 
       axios
         .get(url)
         .then(response => {
-          store.state.packages = response.data.results;
-          store.state.count = response.data.count;
-          store.state.nextUrl = response.data.next;
-          store.state.previousUrl = response.data.previous;
+          this.store.state.package_page.packages = response.data.results;
+          this.store.state.package_page.count = response.data.count;
+          this.store.state.package_page.nextUrl = response.data.next;
+          this.store.state.package_page.previousUrl = response.data.previous;
         })
         .catch(err => {
           this.loading = false;
