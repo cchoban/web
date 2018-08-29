@@ -26,7 +26,6 @@ SECRET_KEY = 'cilm0^9**l(b+jo927ptjm2+%fx=jxgi66a%3*c*31rg2^s0z8'
 DEBUG = True
 
 ALLOWED_HOSTS = ["choban.herokuapp.com", "localhost", "*"]
-django_heroku.settings(locals())
 
 # Application definition
 
@@ -87,6 +86,10 @@ WSGI_APPLICATION = 'choban.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+DATABASE_HOST = os.environ.get('DATABASE_HOST')
+DATABASE_NAME = os.environ.get('DATABASE_NAME')
+DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD')
+DATABASE_USER = os.environ.get('DATABASE_USER')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
