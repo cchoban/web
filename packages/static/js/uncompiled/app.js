@@ -66,7 +66,7 @@ window.store = new Vuex.Store({
       nextUrl: null,
       previousUrl: null
     },
-    search_key: null,
+    search_key: "",
     isPage: false,
     package: {
       name: "",
