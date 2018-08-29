@@ -90,10 +90,10 @@ WSGI_APPLICATION = 'choban.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django',
-        'USER': 'postgres',
-        'PASSWORD': '665200',
-        'HOST': 'postgres'
+        'NAME': 'dd0fcem2n8m70d',
+        'USER': 'julcdlotojaiha',
+        'PASSWORD': '6cfd5de09171efb526b20204c23ccb6b243d5816e763ba658607072da06a015e',
+        'HOST': 'ec2-54-217-250-0.eu-west-1.compute.amazonaws.com',
         'PORT': 5432,
     }
 }
