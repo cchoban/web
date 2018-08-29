@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-
+import django_heroku
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 URL = "https://choban.herokuapp.com"
@@ -26,7 +26,7 @@ SECRET_KEY = 'cilm0^9**l(b+jo927ptjm2+%fx=jxgi66a%3*c*31rg2^s0z8'
 DEBUG = True
 
 ALLOWED_HOSTS = ["choban.herokuapp.com", "localhost", "*"]
-
+django_heroku.settings(locals())
 
 # Application definition
 
@@ -90,10 +90,10 @@ WSGI_APPLICATION = 'choban.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dd0fcem2n8m70d',
-        'USER': 'julcdlotojaiha',
-        'PASSWORD': '6cfd5de09171efb526b20204c23ccb6b243d5816e763ba658607072da06a015e',
-        'HOST': 'ec2-54-217-250-0.eu-west-1.compute.amazonaws.com',
+        'NAME': DATABASE_NAME,
+        'USER': DATABASE_USER,
+        'PASSWORD': DATABASE_PASSWORD,
+        'HOST': DATABASE_HOST,
         'PORT': 5432,
     }
 }

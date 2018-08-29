@@ -8,3 +8,4 @@ whitenoise
 django-filter
 Pillow
 django-ratelimit
+django-heroku
