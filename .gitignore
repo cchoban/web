@@ -106,4 +106,4 @@ packages/static/images/packages/
 .mypy_cache/
 node_modules/
 .idea/
-choban/settings.py
+src/choban/settings.py
