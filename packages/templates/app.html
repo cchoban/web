@@ -1,4 +1,4 @@
-{% load static %}
+{% load static global %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
     <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="site_url" content="{% site_url %}">
 </head>
 
 <body>
