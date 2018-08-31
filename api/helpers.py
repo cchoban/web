@@ -119,15 +119,16 @@ def validate_json(json_object):
 
 
 def check_package_version(json_object):
+    from distutils.version import LooseVersion
     js = json_object
     package_name = js["packageArgs"]["packageName"]
-    package_version = js["packageArgs"]["version"]
+    package_version = LooseVersion(js["packageArgs"]["version"])
 
     repo = Package.objects.filter(
         packageName=package_name) or SubmitPackage.objects.filter(packageName=package_name)
 
     if repo.exists():
-        repo_version = repo.get().packageArgs["version"]
+        repo_version = LooseVersion(repo.get().packageArgs["version"])
         if repo_version >= package_version:
             return {"status": False, "message": "We have never version of this package on system."}
         else:
