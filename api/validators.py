@@ -2,8 +2,15 @@ import os
 import json
 from os.path import splitext
 from django.core.exceptions import ValidationError
+from . import Logger as log
 
 
+
+class MissingIconsFolder(Exception):
+    pass
+
+class MissingInstallationScript(Exception):
+    pass
 def validate_file_extension(value):
     ext = splitext(value.name)[1]
     valid_extensions = ['.zip']
@@ -14,17 +21,20 @@ def validate_file_extension(value):
 def validate_package(packageName):
     for i in os.listdir(os.path.join("files", packageName)):
         if i.lower().endswith('.cb'):
-            try:
-                with open(os.path.join("./files/{0}/{1}".format(packageName, i)), "r") as f:
-                    js = json.load(f)
-                    f.close()
+            if validate_files(packageName):
+                try:
+                    with open(os.path.join("./files/{0}/{1}".format(packageName, i)), "r") as f:
+                        js = json.load(f)
+                        f.close()
 
-                    validate_keys(js)
+                        validate_keys(js)
 
-                return js
+                    return js
 
-            except Exception as e:
-                print(e)
+                except Exception as e:
+                    log.new(e).logError()
+                    return False
+            else:
                 return False
 
 
@@ -34,3 +44,17 @@ def validate_keys(js):
     for i in neededKeys:
         if not i in js:
             return False
+
+
+def validate_files(packageName):
+    folder = os.path.abspath(os.path.join("files", packageName))
+    folders = [
+        'icons',
+    ]
+
+    for i in folders:
+        if i in os.listdir(folder):
+            return True
+        else:
+            log.new(MissingIconsFolder(i)).logError()
+            raise MissingIconsFolder(i)

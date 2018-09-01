@@ -45,12 +45,15 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = SubmitPackage.objects.all()
     serializer_class = SubmitPackageSerializer
-    http_method_names = ['get', "post"]
+    http_method_names = ['post']
     lookup_field = "packageName"
 
     def create(self, request):
         package = self.request.data.get("package")
         package_name = self.request.data.get("packageName")
+
+        if not package or not package_name:
+            return Response({'error': 'Please provide a package.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         if package_name != str(package).split(".")[0]:
             return Response({"error": "Could not accept your request."}, status=status.HTTP_406_NOT_ACCEPTABLE)
