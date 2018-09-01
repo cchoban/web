@@ -168,7 +168,6 @@ def validate_json(json_object):
 
 def check_package_version(json_object):
     from distutils.version import LooseVersion
-    log.new('Checking package version').logInfo()
     js = json_object
     package_name = js["packageArgs"]["packageName"]
     package_version = LooseVersion(js["packageArgs"]["version"])
