@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'packages',
+    'account',
     'rest_framework.authtoken',
     'crispy_forms',
     # 'crispy-forms-semantic-ui'
