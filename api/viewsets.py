@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -52,6 +51,9 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
         package = self.request.data.get("package")
         package_name = self.request.data.get("packageName")
 
+
+        return Response({"error": "You successfully submitted your package."}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        # return Response({"success": "You successfully submitted your package."}, status=status.HTTP_201_CREATED)
         if not package or not package_name:
             return Response({'error': 'Please provide a package.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
 

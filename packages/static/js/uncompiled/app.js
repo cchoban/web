@@ -3,7 +3,6 @@ window.axios = require('axios');
 var Vuex = require('vuex')
 import VueTimeago from 'vue-timeago';
 
-
 function is_logged() {
   axios
     .get("/islogged")
@@ -20,10 +19,18 @@ function is_logged() {
 
 var csrf_token = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const site_url = document.querySelector("meta[name='site_url']").getAttribute("content")
+const login_url = document.querySelector('meta[name="login_url"]').getAttribute('content')
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers.common['X-CSRFToken'] = csrf_token;
 window.logged = is_logged()
 
+
+
+var swal = require('sweetalert2')
+
+window.messages = function (message) {
+     swal.queue(message)
+}
 
 // PackageList.vue Components
 Vue.component('PopularPackages', require('../components/PackageListComponents/FeaturedToday.vue'));
@@ -79,7 +86,8 @@ window.store = new Vuex.Store({
     logged_in: logged_in,
     loading: true,
     api_urls: {
-        "packages": `${site_url}/api/packages`
+        "packages": `${site_url}/api/packages`,
+        'login': `${login_url}`
     }
   },
   mutations: {
@@ -88,8 +96,6 @@ window.store = new Vuex.Store({
     }
   }
 })
-
-
 
 const app = new Vue({
   el: '#app'
