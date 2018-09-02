@@ -1,0 +1,23 @@
+language: python
+
+addons:
+  postgresql: "9.6"
+  apt:
+    packages:
+    - postgresql-9.6-postgis-2.3
+python:
+  - 3.6
+node_js:
+  - "10.9.0"
+install:
+  - pip install -r requirements.txt
+  - pip uninstall psycopg2 -y
+  - pip install psycopg2-binary
+  - npm install
+
+before_script:
+  - psql -c 'create database choban;' -U postgres
+
+script:
+- python manage.py collectstatic --noinput
+- python manage.py test
