@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+djangorestframework = "*"
+"psycopg2" = "*"
+django-crispy-forms = "*"
+"django-gravatar2" = "*"
+gunicorn = "*"
+whitenoise = "*"
+django-filter = "*"
+django-ratelimit = "*"
+django-heroku = "*"
+Django = "==2.1"
+Pillow = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"

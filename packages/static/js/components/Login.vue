@@ -54,7 +54,7 @@ export default {
     },
 
     login: function() {
-      var url = "/login";
+      var url = store.state.api_urls.login;
       var data = new FormData();
       data.append("username", this.username);
       data.append("password", this.password);
