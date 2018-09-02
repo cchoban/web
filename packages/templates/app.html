@@ -27,7 +27,7 @@
     </div>
 
 
-    <script>
+    <script defer>
         {% if user.is_authenticated %}
         var logged_in = true;
         var user_preferences = {
@@ -38,12 +38,27 @@
         var logged_in = false;
         var user_preferences = {};
         {% endif %}
+
     </script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
     <script src="{% static 'js/app.js' %}"></script>
-
+    <script>
+{% if messages %}
+let message_queue = []
+  {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+      message_queue.push({ 'type': 'success', 'text': '{{ message }}' })
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+      message_queue.push({'type': 'error', 'text': '{{ message }}'})
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+      message_queue.push({ 'type': 'info', 'text': '{{ message }}' })
+    {% endif %}
+  {% endfor %}
+messages(message_queue)
+{% endif %}
+    </script>
 </body>
 
 </html>

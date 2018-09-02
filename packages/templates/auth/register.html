@@ -40,7 +40,7 @@
             <p>
             <form action="" method="POST" class="ui form">
                 {% csrf_token %}
-                {{ register_form|crispy }}
+                {{ form|crispy }}
 
             </p>
             <button type="submit" class="ui button positive"> Register </button>

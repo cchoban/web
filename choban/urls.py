@@ -17,14 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 from .routers import router
 from packages import urls as packageUrls
-from packages.views import is_logged, register_view
+from packages.views import is_logged
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls), name="api"),
     path('packages', include(packageUrls), name="PackagesPage"),
     path('account/', include('account.urls')),
-
-
+    #TODO: remove is_logged
     path("islogged", is_logged)
 ]

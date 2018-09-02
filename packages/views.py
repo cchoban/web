@@ -1,30 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-import os
-import json
-from api import helpers as api_helpers
 from . import helpers
 from api.models import Package, Setting, Category
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse, Http404
-from django.urls import reverse
-from .forms import LoginForm, RegisterForm
-from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
 from django_gravatar.helpers import get_gravatar_url, has_gravatar, get_gravatar_profile_url, calculate_gravatar_hash
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-
-
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.views import APIView
 
-from ratelimit.decorators import ratelimit
 
 
 def index(request):
@@ -62,41 +44,6 @@ def ListAllPackages(request):
     }
 
     return render(request, 'packages_page.html', context)
-def register_view(request):
-    form = RegisterForm(request.POST or None)
-    context = {
-        "register_form": form,
-        "message": "",
-        "success": None,
-        "error":None,
-        "redirect": False
-    }
-
-    if request.method == "POST":
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password1")
-
-            if request.user.is_authenticated:
-                return redirect("/")
-
-            try:
-                createUser = form.save()
-
-                auth = authenticate(username=username, password=password)
-                login_to_system = login(request, auth)
-
-                context["success"] = True
-                context["message"] = "You have successfully registered."
-                context["redirect"] = True
-            except Exception as e:
-                print(e)
-                context["error"] = True
-                context["message"] = "Could not register, please try again another time."
-
-    print(context)
-    return render(request, "auth/register.html", context)
-
 
 def getPackage(request, packageName):
 
@@ -108,48 +55,7 @@ def getPackage(request, packageName):
     }
     return render(request, "single.html", context)
 
-
-class AccountView(TemplateView):
-    '''
-    Profile page for user
-    '''
-    def get(self, request, username = ""):
-        context = {}
-        user_details = get_object_or_404(User, username=username)
-        user_packages = Package.objects.filter(user=user_details.id)
-
-        if has_gravatar(user_details.email):
-            context["profile_picture"] = get_gravatar_url(user_details.email, size=650)
-
-
-        context["user_package_count"] = len(user_packages)
-        context["username"] = user_details.username
-        context["user_packages"] = user_packages
-        return render(request, 'auth/account.html', context)
-
-
-class AccountTokenView(LoginRequiredMixin, TemplateView):
-    def get(self, request):
-        context = {}
-        return render(request, 'auth/get_token.html', context)
-
-    @ratelimit(key="ip", rate="2/d", block=True)
-    def post(self, request):
-        token = Token.objects.filter(user=request.user)
-        if token.exists() and not request.POST.get('generate_new_token'):
-            return JsonResponse({"status": False, "message": "Your account has already a token.", "key": token.get(user=request.user).key})
-        elif request.POST.get('generate_new_token'):
-            update_token = Token.objects.filter(user=request.user)
-            update_token.delete()
-
-
-        create_token = Token.objects.create(user=request.user)
-        if create_token:
-            return JsonResponse({"status": True, "message": "You successfully generated your new key!", "key": create_token.key})
-
 @api_view(['GET'])
-# @authentication_classes((TokenAuthentication,))
-# @permission_classes((IsAuthenticated,))
 def package_list(request):
     packages = Package.objects.all()
     do_update = Setting.objects.filter(do_update_packages=True)
@@ -181,9 +87,3 @@ def is_logged(request):
         return JsonResponse({"auth": True})
     else:
         return JsonResponse({"auth": False})
-
-
-def logout_view(request):
-    if request.user.is_authenticated:
-         logout(request)
-    return redirect(reverse('PackagesPage'))

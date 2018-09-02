@@ -3,7 +3,6 @@ window.axios = require('axios');
 var Vuex = require('vuex')
 import VueTimeago from 'vue-timeago';
 
-
 function is_logged() {
   axios
     .get("/islogged")
@@ -25,6 +24,13 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers.common['X-CSRFToken'] = csrf_token;
 window.logged = is_logged()
 
+
+
+var swal = require('sweetalert2')
+
+window.messages = function (message) {
+     swal.queue(message)
+}
 
 // PackageList.vue Components
 Vue.component('PopularPackages', require('../components/PackageListComponents/FeaturedToday.vue'));
@@ -90,8 +96,6 @@ window.store = new Vuex.Store({
     }
   }
 })
-
-
 
 const app = new Vue({
   el: '#app'
