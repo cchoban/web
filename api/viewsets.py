@@ -51,9 +51,6 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
         package = self.request.data.get("package")
         package_name = self.request.data.get("packageName")
 
-
-        return Response({"error": "You successfully submitted your package."}, status=status.HTTP_406_NOT_ACCEPTABLE)
-        # return Response({"success": "You successfully submitted your package."}, status=status.HTTP_201_CREATED)
         if not package or not package_name:
             return Response({'error': 'Please provide a package.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
