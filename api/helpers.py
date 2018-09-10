@@ -37,11 +37,10 @@ def createFolders():
 
 def handle_uploaded_files(zipRequest):
     withoutExt = str(zipRequest).split('.')[0]
-    write(zipRequest)
-    unzip(withoutExt, os.path.join("uploads/", str(zipRequest)))
+    # write(zipRequest)
+    unzip(withoutExt, zipRequest)
     validate = validate_package(withoutExt)
     if isinstance(validate, dict):
-        print('dict')
         moveIconsToStatic(withoutExt)
         new_json = reDefineJson(withoutExt)
         version = check_package_version(new_json)
