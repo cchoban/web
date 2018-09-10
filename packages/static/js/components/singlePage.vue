@@ -72,7 +72,7 @@
     </div>
 
         <div class="ui segment fifteen column row">
-            <vue-disqus shortname="test-q7dfbf8l5p" :url="url" :identifier="url" :title="`Choban Packages | ${packagename} `"></vue-disqus>
+            <vue-disqus :shortname="store.state.disqus_shortname" :url="url" :identifier="url" :title="`Choban Packages | ${packagename} `"></vue-disqus>
         </div>
     </div>
   </div>
@@ -88,12 +88,13 @@ export default {
       package: [],
       loading: true,
       isPage: false,
-      storeman: store,
+      store: null,
       active: false,
       url: ""
     };
   },
   beforeMount: function() {
+    this.store = store;
     this.pushState();
     this.url = window.location.href;
     alert(this.url);

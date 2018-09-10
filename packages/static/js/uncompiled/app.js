@@ -4,21 +4,25 @@ let Vuex = require('vuex')
 let VueDisqus = require('vue-disqus')
 import VueTimeago from 'vue-timeago';
 
+
+// Config
+let disqus_shortname = 'test-q7dfbf8l5p'
+
 function is_logged() {
-  axios
-    .get("/islogged")
-    .then(response => {
-      if (response.data.auth) {
-        return true
-      }
-    })
-    .catch(err => {
-      this.loading = false;
-      console.log(err);
-    });
+    axios
+        .get("/islogged")
+        .then(response => {
+            if (response.data.auth) {
+                return true
+            }
+        })
+        .catch(err => {
+            this.loading = false;
+            console.log(err);
+        });
 }
 
-var csrf_token = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+let csrf_token = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const site_url = document.querySelector("meta[name='site_url']").getAttribute("content")
 const login_url = document.querySelector('meta[name="login_url"]').getAttribute('content')
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -27,10 +31,9 @@ window.logged = is_logged()
 
 
 
-var swal = require('sweetalert2')
-
+const swal = require('sweetalert2')
 window.messages = function (message) {
-     swal.queue(message)
+    swal.queue(message)
 }
 
 // PackageList.vue Components
@@ -60,48 +63,49 @@ Vue.component('app', require('../components/app.vue'));
 Vue.use(Vuex)
 Vue.use(VueDisqus)
 Vue.use(VueTimeago, {
-  name: 'Timeago', // Component name, `Timeago` by default
-  locale: null, // Default locale
-  locales: {
-    'zh-CN': require('date-fns/locale/zh_cn'),
-    'ja': require('date-fns/locale/ja'),
-  }
+    name: 'Timeago', // Component name, `Timeago` by default
+    locale: null, // Default locale
+    locales: {
+        'zh-CN': require('date-fns/locale/zh_cn'),
+        'ja': require('date-fns/locale/ja'),
+    }
 })
 
 window.store = new Vuex.Store({
-  state: {
-    package_page: {
-      packages: null,
-      count: null,
-      nextUrl: null,
-      previousUrl: null
+    state: {
+        package_page: {
+            packages: null,
+            count: null,
+            nextUrl: null,
+            previousUrl: null
+        },
+        search_key: "",
+        isPage: false,
+        package: {
+            name: "",
+            id: null
+        },
+        history: [],
+        reload: true,
+        user: user_preferences,
+        logged_in: logged_in,
+        loading: true,
+        api_urls: {
+            "packages": `${site_url}/api/packages`,
+            'login': `${login_url}`
+        },
+        title: "",
+        disqus_shortname: disqus_shortname
     },
-    search_key: "",
-    isPage: false,
-    package: {
-      name: "",
-      id: null
-    },
-    history: [],
-    reload: true,
-    user: user_preferences,
-    logged_in: logged_in,
-    loading: true,
-    api_urls: {
-        "packages": `${site_url}/api/packages`,
-        'login': `${login_url}`
-    },
-    title: ""
-  },
-  mutations: {
-    logged_in: function (state, isit = false) {
-      state.logged_in = isit
+    mutations: {
+        logged_in: function (state, isit = false) {
+            state.logged_in = isit
+        }
     }
-  }
 })
 
 const app = new Vue({
-  el: '#app'
+    el: '#app'
 });
 
 require("./vue-directives.js")
