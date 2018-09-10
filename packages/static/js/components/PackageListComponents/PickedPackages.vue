@@ -16,7 +16,7 @@
                     <div v-if="loading">
                         <div class="ui attached segment loading"><br></div>
                     </div>
-                    <div class="ui attached segment listings" v-for="package in pickedPopulars.slice(0, 5)" @click="showPage(package.packageName, package.id)">
+                    <div class="ui attached segment listings" v-for="package in pickedPopulars" @click="showPage(package.packageName, package.id)">
                         <div class="topla" >
                             <img class="ui avatar image remove-circle" :src="package.server.icon" alt="">
                             <span class="text">{{ package.packageName }}</span>
@@ -42,7 +42,7 @@
                     <div v-if="loading">
                         <div class="ui attached segment loading"><br></div>
                     </div>
-                    <div class="ui attached segment listings" v-for="package in pickedPackages.slice(0, 5)" @click="showPage(package.packageName, package.id)">
+                    <div class="ui attached segment listings" v-for="package in pickedPackages" @click="showPage(package.packageName, package.id)">
 
                         <div class="topla" >
                             <img class="ui avatar image remove-circle" :src="package.server.icon" alt="">
@@ -73,12 +73,10 @@ export default {
       pickedPopulars: {}
     };
   },
-  mounted: function() {
-    this.getPicked();
-    this.getPopularPicked();
-  },
   beforeMount: function() {
     this.store = store;
+    this.getPicked();
+    this.getPopularPicked();
   },
   methods: {
     showPage: function(packageName, packageId) {
@@ -98,7 +96,7 @@ export default {
       axios
         .get(url)
         .then(response => {
-          this.pickedPackages = response.data.results;
+          this.pickedPackages = response.data.results.slice(0,5);
           this.loading = false;
         })
         .catch(err => {
@@ -110,7 +108,7 @@ export default {
       axios
         .get(url)
         .then(response => {
-          this.pickedPopulars = response.data.results;
+          this.pickedPopulars = response.data.results.slice(0,5);
           this.loading = false;
         })
         .catch(err => {

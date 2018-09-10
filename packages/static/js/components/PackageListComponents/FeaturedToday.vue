@@ -7,12 +7,12 @@
 
             <div class="featured-item-list">
 
-                <div v-for="package in popularPackages.slice(0, 10)" v-if="!loading">
+                <div v-for="package in popularPackages" v-if="!loading">
                     <a class="featured-item" :style='"background-image: linear-gradient(to top, black, transparent), url("+package.server.icon+");"' @click="showPage(package.packageName, package.id)">
                         <h1> {{ package.packageName }} </h1>
                         <p></p>
                         <label>
-                            <a :href="category_url(package.category_name)" class="removelink addCatUrl">{{ package.category_name }}</a> 
+                            <a :href="category_url(package.category_name)" class="removelink addCatUrl">{{ package.category_name }}</a>
                         </label>
                     </a>
                 </div>
@@ -54,7 +54,7 @@ export default {
       axios
         .get(url)
         .then(response => {
-          this.popularPackages = response.data.results;
+          this.popularPackages = response.data.results.slice(0, 10);
           this.loading = false;
         })
         .catch(err => {
