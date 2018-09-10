@@ -1,6 +1,7 @@
 window.Vue = require('vue');
 window.axios = require('axios');
-var Vuex = require('vuex')
+let Vuex = require('vuex')
+let VueDisqus = require('vue-disqus')
 import VueTimeago from 'vue-timeago';
 
 function is_logged() {
@@ -57,6 +58,7 @@ Vue.component('app', require('../components/app.vue'));
 
 
 Vue.use(Vuex)
+Vue.use(VueDisqus)
 Vue.use(VueTimeago, {
   name: 'Timeago', // Component name, `Timeago` by default
   locale: null, // Default locale
@@ -88,7 +90,8 @@ window.store = new Vuex.Store({
     api_urls: {
         "packages": `${site_url}/api/packages`,
         'login': `${login_url}`
-    }
+    },
+    title: ""
   },
   mutations: {
     logged_in: function (state, isit = false) {

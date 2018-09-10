@@ -1,7 +1,7 @@
 <template>
     <div class="push">
         <div class="window-title column">
-                <a href="#" class="removelink"> title </a>
+                <a href="#" class="removelink"> {{ store.state.title }} </a>
             </div>
             <div class="ui menu header-navbar">
                 <div class="ui two column container fluid ">
@@ -41,8 +41,12 @@
 export default {
   data: function() {
     return {
-      logged_in: store.state.logged_in
+      logged_in: store.state.logged_in,
+      store: ""
     };
+  },
+  beforeMount: function() {
+      this.store = store
   },
   mounted: function() {
     //

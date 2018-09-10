@@ -70,13 +70,17 @@
 
         </div>
     </div>
+
+        <div class="ui segment fifteen column row">
+            <vue-disqus shortname="test-q7dfbf8l5p" :url="url" :identifier="url" :title="`Choban Packages | ${packagename} `"></vue-disqus>
+        </div>
     </div>
   </div>
 
 </template>
 
 <script>
-var hljs = require("highlight.js");
+let hljs = require("highlight.js");
 export default {
   props: ["packagename", "packageid"],
   data: function() {
@@ -85,13 +89,22 @@ export default {
       loading: true,
       isPage: false,
       storeman: store,
-      active: false
+      active: false,
+      url: ""
     };
+  },
+  beforeMount: function() {
+    this.pushState();
+    this.url = window.location.href;
+    alert(this.url);
   },
   mounted: function() {
     hljs.initHighlightingOnLoad();
     this.getPackage(this.packageid);
-    this.pushState();
+  },
+
+  destroyed: function() {
+    store.state.title = "";
   },
   methods: {
     getPackage(id) {
@@ -120,9 +133,10 @@ export default {
     pushState() {
       store.state.history.push(this.packagename);
       history.pushState(null, null, "/packages/" + this.packagename);
+      store.state.title = this.packagename;
     },
-    category_url: function (category_name) {
-      return '/packages/category/'+Vue.options.filters.slugify(category_name)
+    category_url: function(category_name) {
+      return "/packages/category/" + Vue.options.filters.slugify(category_name);
     }
   }
 };
@@ -133,5 +147,10 @@ export default {
   width: 59%;
   float: right;
   margin-bottom: 50px !important;
+}
+
+#disqus_thread {
+  width: 100%;
+  padding: 17px;
 }
 </style>
