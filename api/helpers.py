@@ -91,17 +91,15 @@ def write(zip):
 
 def cleanup(packageName):
     from django.conf import settings
-    filesPath = os.path.join("files/", packageName)
-    uploadsPath = os.path.join(settings.BASE_DIR, "uploads/", packageName)
+    filesPath = os.path.join("files", packageName)
+    uploadsPath = os.path.join(settings.BASE_DIR, "uploads", packageName+'.zip')
 
     try:
-        log.new('Cleaning up '+packageName).logInfo()
         if os.path.exists(filesPath):
             rmtree(filesPath)
             os.remove(filesPath)
-
-        rmtree(uploadsPath)
-        os.remove(uploadsPath)
+        if os.path.exists(uploadsPath):
+            os.remove(uploadsPath)
     except Exception as e:
         log.new(e).logError()
         return False
