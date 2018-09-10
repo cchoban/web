@@ -97,7 +97,6 @@ export default {
     this.store = store;
     this.pushState();
     this.url = window.location.href;
-    alert(this.url);
   },
   mounted: function() {
     hljs.initHighlightingOnLoad();
