@@ -15,7 +15,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
     serializer_class = PackageSerializer
     filter_backends = (filters.SearchFilter,
                        filters.OrderingFilter, DjangoFilterBackend, )
-    filter_fields = ['category']
+    filter_fields = ['category', 'showcase']
     ordering_fields = ('created_at', 'updated_at', 'download_count', )
     search_fields = ("packageName",)
     http_method_names = ['get']

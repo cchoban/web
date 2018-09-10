@@ -8,7 +8,6 @@ from django_gravatar.helpers import get_gravatar_url, has_gravatar, get_gravatar
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 
-
 def index(request):
 
     email = request.user.email if request.user.is_authenticated else ""
@@ -18,6 +17,7 @@ def index(request):
     }
 
     return render(request, "index.html", context)
+
 
 def category_index(request, category_name):
     category = get_object_or_404(Category, slug=category_name)
@@ -45,6 +45,15 @@ def ListAllPackages(request):
 
     return render(request, 'packages_page.html', context)
 
+
+def EditorPicks(request):
+    context = {
+        'maxentry': settings.REST_FRAMEWORK['PAGE_SIZE']
+    }
+
+    return render(request, 'editor_picks.html', context)
+
+
 def getPackage(request, packageName):
 
     id = Package.objects.filter(packageArgs__packageName=packageName)[:1]
@@ -54,6 +63,7 @@ def getPackage(request, packageName):
         "packageId": id
     }
     return render(request, "single.html", context)
+
 
 @api_view(['GET'])
 def package_list(request):
@@ -80,6 +90,7 @@ def package_list(request):
             })
 
     return JsonResponse(json)
+
 
 @require_http_methods(["GET"])
 def is_logged(request):
