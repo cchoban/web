@@ -9,61 +9,7 @@
 
     <div class="ui three column container fluid content-section">
         <PackagesSection></PackagesSection>
-        <div class="second-section column twentyfivepx clearfix">
-                <a href="#" class="header-text bold removelink">
-                    <h2 class="left-floated bold">RSS</h2>
-                    <label class="view-all unbold right-floated"> View all
-                        <i class="angle right icon"></i>
-                    </label>
-                </a>
-                <div class="inner-section">
-                    <div class="ui segments panel">
-                        <div class="ui segment panel-header">
-                            <p class="bold">Recent Articles</p>
-                        </div>
-                        <div class="ui secondary segment panel-content">
-                            <div class="ui attached segment listings">
-                                <div class="topla">
-                                    <img class="ui avatar image remove-circle" src="https://d12xoj7p9moygp.cloudfront.net/favicon/favicon-128.png" alt="">
-                                    <span class="text">This segment is attached on both sides</span>
-                                    <span class="right-floated day">5 day ago</span>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="ui panel-footer column">
-                            <a class="removelink loadMoreBtn">
-                                <i class="angle down icon light" style="font-size:20px;margin:0 auto"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="inner-section">
-                    <div class="ui segments panel">
-                        <div class="ui segment panel-header">
-                            <p class="bold">Feeds</p>
-                        </div>
-                        <div class="ui secondary segment panel-content">
-                            <div class="ui attached segment listings">
-                                <div class="topla">
-                                    <img class="ui avatar image remove-circle" src="https://d12xoj7p9moygp.cloudfront.net/favicon/favicon-128.png" alt="">
-                                    <span class="text">This segment is attached on both sides</span>
-                                    <span class="right-floated day"><i class="angle right icon"></i></span>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="ui panel-footer column">
-                            <a class="removelink loadMoreBtn">
-                                <i class="angle down icon light" style="font-size:20px;margin:0 auto"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <PickedPage></PickedPage>
             <div class="third-section column twentyfivepx clearfix">
                 <a href="#" class="header-text bold removelink">
                     <h2 class="left-floated">Discover</h2>

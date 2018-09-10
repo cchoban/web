@@ -40,6 +40,7 @@ window.messages = function (message) {
 Vue.component('PopularPackages', require('../components/PackageListComponents/FeaturedToday.vue'));
 Vue.component('PackagesSection', require('../components/PackageListComponents/PackagesSection.vue'));
 Vue.component('Pagination', require('../components/PackageListComponents/Pagination.vue'))
+Vue.component('PickedPage', require('../components/PackageListComponents/PickedPackages.vue'));
 
 
 // Index
@@ -50,7 +51,6 @@ Vue.component('category-page', require('../components/SinglePage/CategoryPage.vu
 Vue.component('Packages', require('../components/SinglePage/Packages.vue'));
 Vue.component('Picks', require('../components/SinglePage/EditorPicks.vue'));
 
-;
 Vue.component('readMore', require('../components/readMore.vue'));
 Vue.component('installCommand', require('../components/installCommandLine.vue'));
 Vue.component('apikey', require('../components/api_key.vue'));
