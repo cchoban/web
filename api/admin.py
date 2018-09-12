@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Package, SubmitPackage, Setting, Category
 from django.shortcuts import get_object_or_404
+from . import Logger as log
 
 admin.site.register(Package)
 admin.site.register(Setting)
@@ -21,12 +22,10 @@ def make_published(self, request, queryset):
                     packageUninstallArgs=i.packageUninstallArgs,
                     server=i.server
                 )
-
                 queryset.delete()
 
                 if queryset:
                     message_bit = "Successfully moved to approved packages."
-
                 self.message_user(request, message_bit)
             else:
                 package = packageExists[0]
@@ -38,6 +37,7 @@ def make_published(self, request, queryset):
                 self.message_user(request, message_bit, "success")
 
         except Exception as e:
+            log.new(e).logError()
             pass
 
 

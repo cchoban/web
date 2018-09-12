@@ -15,7 +15,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
     serializer_class = PackageSerializer
     filter_backends = (filters.SearchFilter,
                        filters.OrderingFilter, DjangoFilterBackend, )
-    filter_fields = ['category']
+    filter_fields = ['category', 'showcase']
     ordering_fields = ('created_at', 'updated_at', 'download_count', )
     search_fields = ("packageName",)
     http_method_names = ['get']
@@ -72,7 +72,7 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
         #     return Response({"error": "This package is already published."}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         if not submitPackageExists:
-            if self.request.FILES["package"] and self.request.data.get("packageName"):
+            if package and package_name:
                 uploaded = helpers.handle_uploaded_files(
                     self.request.FILES['package'])
 
@@ -91,7 +91,7 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
                                         user=request.user
                                         )
                         Setting.objects.update(do_update_packages=True)
-                        helpers.cleanup(self.request.data.get("packageName"))
+                        helpers.cleanup(package_name)
 
                     return Response({"success": "You successfully submitted your package."}, status=status.HTTP_201_CREATED)
                 else:

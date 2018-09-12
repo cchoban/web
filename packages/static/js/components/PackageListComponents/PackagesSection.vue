@@ -16,7 +16,7 @@
                         <div v-if="loading">
                             <div class="ui attached segment loading"><br></div>
                         </div>
-                        <div class="ui attached segment listings" v-for="package in popularPackages.slice(0, 5)" @click="showPage(package.packageName, package.id)">
+                        <div class="ui attached segment listings" v-for="package in popularPackages" @click="showPage(package.packageName, package.id)">
                             <div class="topla" >
                                 <img class="ui avatar image remove-circle" :src="package.server.icon" alt="">
                                 <span class="text">{{ package.packageName }}</span>
@@ -42,7 +42,7 @@
                         <div v-if="loading">
                             <div class="ui attached segment loading"><br></div>
                         </div>
-                        <div class="ui attached segment listings" v-for="package in recentPackages.slice(0, 5)" @click="showPage(package.packageName, package.id)">
+                        <div class="ui attached segment listings" v-for="package in recentPackages" @click="showPage(package.packageName, package.id)">
 
                             <div class="topla" >
                                 <img class="ui avatar image remove-circle" :src="package.server.icon" alt="">
@@ -93,7 +93,7 @@ export default {
       axios
         .get(url)
         .then(response => {
-          this.popularPackages = response.data.results;
+          this.popularPackages = response.data.results.slice(0,5);
           this.loading = false;
         })
         .catch(err => {
@@ -105,7 +105,7 @@ export default {
       axios
         .get(url)
         .then(response => {
-          this.recentPackages = response.data.results;
+          this.recentPackages = response.data.results.slice(0,5);
           this.loading = false;
         })
         .catch(err => {
