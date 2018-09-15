@@ -29,7 +29,7 @@
                 <a :href="category_url(package.category_name)"> {{ package.category_name }}</a>
               </p>
             </div>
-            <div class="ui segment" v-if="package.packageArgs.dependencies">
+            <div class="ui segment" v-if="package.packageArgs.dependencies && package.packageArgs.dependencies.lenght > 0">
               <p>Dependencie(s):
                 <ul>
                     <li v-for="dep in package.packageArgs.dependencies"> {{ dep }}</li>
