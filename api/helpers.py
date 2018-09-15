@@ -37,12 +37,11 @@ def createFolders():
 
 def handle_uploaded_files(zipRequest):
     withoutExt = str(zipRequest).split('.')[0]
-    # write(zipRequest)
     unzip(withoutExt, zipRequest)
     validate = validate_package(withoutExt)
     if isinstance(validate, dict):
         moveIconsToStatic(withoutExt)
-        new_json = reDefineJson(withoutExt)
+        new_json = reDefineJson(withoutExt, validate)
         version = check_package_version(new_json)
         if bool(version["status"]):
             new_json["status"] = True
@@ -50,7 +49,7 @@ def handle_uploaded_files(zipRequest):
         else:
             return {"status": False, "message": version["message"]}
     else:
-        cleanup(str(zipRequest))
+        cleanup(withoutExt)
         log.new(ValidationError(
             "We could not validate your JSON file. Be sure you have generated file with the Choban Package Manager.")).logError()
         raise ValidationError(
@@ -129,13 +128,13 @@ def moveIconsToStatic(packageName):
                     image = i
                     if os.path.exists(iconsPath) and not os.path.exists(destPath):
                         move(iconsPath, destPath)
+        return True
     except Exception as e:
         log.new(e).logError()
         return False
 
 
-def reDefineJson(packageName):
-    validate = validate_package(packageName)
+def reDefineJson(packageName, validated_data):
     imagePath = os.path.join("packages", "static",
                              "images", "packages", packageName)
     imageExtensions = ["png", "jpg", "jpeg", "svg"]
@@ -143,13 +142,13 @@ def reDefineJson(packageName):
         log.new('{} does not exists '.format(imagePath)).logError()
         raise FileNotFoundError(imagePath)
 
-    if isinstance(validate, dict):
+    if isinstance(validated_data, dict):
         for i in os.listdir(imagePath):
             for ext in imageExtensions:
                 if i.endswith(ext):
-                    validate['server'][
+                    validated_data['server'][
                         'icon'] = "/static/images/packages/{0}/{1}".format(packageName, i)
-                    return validate
+                    return validated_data
     else:
         log.new(IsADirectoryError('Validated data is not dict!'))
         return False
