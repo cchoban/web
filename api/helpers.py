@@ -37,11 +37,13 @@ def createFolders():
 
 def handle_uploaded_files(zipRequest):
     withoutExt = str(zipRequest).split('.')[0]
+    isUpgrade = is_upgrade(withoutExt)
     unzip(withoutExt, zipRequest)
-    validate = validate_package(withoutExt)
+    validate = validate_package(withoutExt, isUpgrade)
+
     if isinstance(validate, dict):
-        moveIconsToStatic(withoutExt)
-        new_json = reDefineJson(withoutExt, validate)
+        moveIconsToStatic(withoutExt, isUpgrade)
+        new_json = reDefineJson(withoutExt, validate, isUpgrade)
         version = check_package_version(new_json)
         if bool(version["status"]):
             new_json["status"] = True
@@ -104,7 +106,11 @@ def cleanup(packageName):
         return False
 
 
-def moveIconsToStatic(packageName):
+def moveIconsToStatic(packageName, skipCheckingOfIcons):
+
+    if skipCheckingOfIcons:
+        return True
+
     iconsPath = os.path.join("files/", packageName, "icons/")
     destPath = os.path.join("packages", "static",
                             "images", "packages", packageName)
@@ -134,7 +140,11 @@ def moveIconsToStatic(packageName):
         return False
 
 
-def reDefineJson(packageName, validated_data):
+def reDefineJson(packageName, validated_data, skipCheckingOfIcons):
+
+    if skipCheckingOfIcons:
+        return validated_data
+
     imagePath = os.path.join("packages", "static",
                              "images", "packages", packageName)
     imageExtensions = ["png", "jpg", "jpeg", "svg"]
@@ -161,6 +171,14 @@ def validate_json(json_object):
         log.new(e).logError()
         return False
 
+
+def is_upgrade(package_name):
+    find_package = Package.objects.filter(packageName=package_name)
+
+    if find_package.exists():
+        return True
+    else:
+        return False
 
 def check_package_version(json_object):
     from distutils.version import LooseVersion
