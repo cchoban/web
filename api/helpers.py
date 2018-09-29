@@ -44,6 +44,7 @@ def handle_uploaded_files(zipRequest):
     if isinstance(validate, dict):
         moveIconsToStatic(withoutExt, isUpgrade)
         new_json = reDefineJson(withoutExt, validate, isUpgrade)
+        compress_icon(new_json)
         version = check_package_version(new_json)
         if bool(version["status"]):
             new_json["status"] = True
@@ -131,7 +132,6 @@ def moveIconsToStatic(packageName, skipCheckingOfIcons):
         for i in os.listdir(iconsPath):
             for ext in imageExtensions:
                 if i.endswith(ext):
-                    image = i
                     if os.path.exists(iconsPath) and not os.path.exists(destPath):
                         move(iconsPath, destPath)
         return True
@@ -197,3 +197,29 @@ def check_package_version(json_object):
             return {"status": True, "message": "Update on progress"}
     else:
         return {"status": True, "message": "Success"}
+
+
+def compress_icon(script):
+    from PIL import Image
+    from django.conf import settings
+
+    package_name = script['packageArgs']['packageName']
+    image_path = os.path.join(settings.BASE_DIR, 'packages', 'static','images','packages', package_name)
+
+    for file in os.listdir(image_path):
+
+        try:
+            im = Image.open(image_path+'//'+file)
+
+            if file.endswith('png'):
+                file_format = 'PNG'
+            elif file.endswith('jpg') or file.endswith('jpeg'):
+                file_format = 'JPEG'
+
+
+            newImage = im.resize((300, 300))
+            newImage.save(image_path + '//' + file, format=file_format, quality=70)
+            return True
+        except Exception as e:
+            log.new(e).logError()
+        break
