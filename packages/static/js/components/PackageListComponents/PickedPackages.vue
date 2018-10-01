@@ -18,7 +18,9 @@
                     </div>
                     <div class="ui attached segment listings" v-for="package in pickedPopulars" @click="showPage(package.packageName, package.id)">
                         <div class="topla" >
-                            <img class="ui avatar image remove-circle" :src="package.server.icon" alt="">
+                            <span v-lazy-container="{ selector: 'img' }">
+                                    <img class="ui avatar image remove-circle" :data-src="package.server.icon" alt="">
+                            </span>
                             <span class="text">{{ package.packageName }}</span>
                             <span class="right-floated day"><timeago :since="package.updated_at"></timeago></span>
                         </div>
@@ -45,7 +47,9 @@
                     <div class="ui attached segment listings" v-for="package in pickedPackages" @click="showPage(package.packageName, package.id)">
 
                         <div class="topla" >
-                            <img class="ui avatar image remove-circle" :src="package.server.icon" alt="">
+                            <span v-lazy-container="{ selector: 'img' }">
+                                    <img class="ui avatar image remove-circle" :data-src="package.server.icon" alt="">
+                            </span>
                             <span class="text">{{ package.packageName }}</span>
                             <span class="right-floated day"><timeago :since="package.updated_at"></timeago></span>
                         </div>
