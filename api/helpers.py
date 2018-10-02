@@ -144,7 +144,6 @@ def reDefineJson(packageName, validated_data, skipCheckingOfIcons):
 
     if skipCheckingOfIcons:
         validated_data['server']['icon'] = Package.objects.get(packageName=packageName).server['icon']
-              Package.objects.get(packageName=packageName).server['icon'])
         return validated_data
 
     imagePath = os.path.join("packages", "static",
