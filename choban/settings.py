@@ -36,13 +36,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     'rest_framework',
     'api',
     'packages',
     'account',
     'rest_framework.authtoken',
     'crispy_forms',
-    # 'crispy-forms-semantic-ui'
     'django_gravatar',
     'django_filters'
 ]
@@ -68,7 +68,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'packages', 'templates')
+            os.path.join(BASE_DIR, 'packages', 'templates'),
+            os.path.join(BASE_DIR, 'choban', 'templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -145,7 +146,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

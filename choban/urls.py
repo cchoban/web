@@ -18,6 +18,15 @@ from django.urls import path, include
 from .routers import router
 from packages import urls as packageUrls
 from packages.views import is_logged
+from django.contrib.sitemaps.views import sitemap
+from . import sitemaps
+from .views import sitemap_index as index
+
+
+sitemap_index = {
+    'Package': sitemaps.PackageSitemap,
+}
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +34,7 @@ urlpatterns = [
     path('packages', include(packageUrls), name="PackagesPage"),
     path('account/', include('account.urls')),
     #TODO: remove is_logged
-    path("islogged", is_logged)
+    path("islogged", is_logged),
+    path('sitemap_index.xml', index, name='Sitemap'),
+    path('sitemap_package.xml', sitemap, {'sitemaps': sitemap_index, 'template_name': 'package-sitemap.html'}, name='SitemapPackage'),
 ]

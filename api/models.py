@@ -4,6 +4,7 @@ from .validators import validate_file_extension
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.template.defaultfilters import slugify
+from django.urls import reverse
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
@@ -36,6 +37,8 @@ class Package(models.Model):
     def __str__(self):
         return self.packageName
 
+    def get_absolute_url(self):
+        return reverse('getPackage', kwargs={'packageName': self.packageName})
 
 
 class SubmitPackage(models.Model):
