@@ -14,6 +14,7 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
     <meta name="site_url" content="{% site_url %}">
     <meta name="login_url" content="{% url 'LoginPage' %}">
+    <meta name="google-site-verification" content="vfPw42t-93AceleHoSjAPVVZvsisSVisQB4IcbXfAFk" />
 </head>
 
 <body>
@@ -27,24 +28,24 @@
     </div>
 
 
-    <script defer>
-        {% if user.is_authenticated %}
-        var logged_in = true;
-        var user_preferences = {
-            username: "{{ user.username }}",
-            profilePicture: "{{ userPicture }}"
-        };
-        {% else %}
-        var logged_in = false;
-        var user_preferences = {};
-        {% endif %}
+<script defer>
+    {% if user.is_authenticated %}
+    var logged_in = true;
+    var user_preferences = {
+        username: "{{ user.username }}",
+        profilePicture: "{{ userPicture }}"
+    };
+    {% else %}
+    var logged_in = false;
+    var user_preferences = {};
+    {% endif %}
 
-    </script>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
-    <script src="{% static 'js/app.js' %}"></script>
-    <script>
+</script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
+<script src="{% static 'js/app.js' %}"></script>
+<script>
 {% if messages %}
 let message_queue = []
   {% for message in messages %}
