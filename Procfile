@@ -1,1 +1,1 @@
-web: python manage.py collectstatic --noinput; gunicorn choban.wsgi
+web: bin/start-nginx bin/start-pgbouncer-stunnel gunicorn -c gunicorn.conf choban.wsgi:application
