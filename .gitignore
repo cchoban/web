@@ -105,4 +105,3 @@ uploads/
 .mypy_cache/
 node_modules/
 .idea/
-settings.py
