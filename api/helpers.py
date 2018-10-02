@@ -143,6 +143,8 @@ def moveIconsToStatic(packageName, skipCheckingOfIcons):
 def reDefineJson(packageName, validated_data, skipCheckingOfIcons):
 
     if skipCheckingOfIcons:
+        validated_data['server']['icon'] = Package.objects.get(packageName=packageName).server['icon']
+              Package.objects.get(packageName=packageName).server['icon'])
         return validated_data
 
     imagePath = os.path.join("packages", "static",
@@ -190,11 +192,17 @@ def check_package_version(json_object):
         packageName=package_name) or SubmitPackage.objects.filter(packageName=package_name)
 
     if repo.exists():
-        repo_version = LooseVersion(repo.get().packageArgs["version"])
-        if repo_version >= package_version:
-            return {"status": False, "message": "We have never version of this package on system."}
+        repo_version = repo.get().packageArgs["version"]
+        if repo_version and package_version:
+            if LooseVersion(repo_version) >= package_version:
+                return {"status": False, "message": "We have never version of this package on system."}
+            else:
+                return {"status": True, "message": "Update on progress"}
         else:
-            return {"status": True, "message": "Update on progress"}
+            return {
+                "status": False,
+                "message": "We could not verify version number, please check it."
+            }
     else:
         return {"status": True, "message": "Success"}
 
