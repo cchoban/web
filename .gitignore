@@ -90,8 +90,9 @@ ENV/
 env.bak/
 venv.bak/
 files/
+cache/
+staticfiles/
 uploads/
-packages/static/images/packages/
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -106,4 +107,4 @@ packages/static/images/packages/
 .mypy_cache/
 node_modules/
 .idea/
-settings.py
+

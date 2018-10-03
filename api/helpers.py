@@ -37,12 +37,14 @@ def createFolders():
 
 def handle_uploaded_files(zipRequest):
     withoutExt = str(zipRequest).split('.')[0]
-    # write(zipRequest)
+    isUpgrade = is_upgrade(withoutExt)
     unzip(withoutExt, zipRequest)
-    validate = validate_package(withoutExt)
+    validate = validate_package(withoutExt, isUpgrade)
+
     if isinstance(validate, dict):
-        moveIconsToStatic(withoutExt)
-        new_json = reDefineJson(withoutExt)
+        moveIconsToStatic(withoutExt, isUpgrade)
+        new_json = reDefineJson(withoutExt, validate, isUpgrade)
+        compress_icon(new_json)
         version = check_package_version(new_json)
         if bool(version["status"]):
             new_json["status"] = True
@@ -50,7 +52,7 @@ def handle_uploaded_files(zipRequest):
         else:
             return {"status": False, "message": version["message"]}
     else:
-        cleanup(str(zipRequest))
+        cleanup(withoutExt)
         log.new(ValidationError(
             "We could not validate your JSON file. Be sure you have generated file with the Choban Package Manager.")).logError()
         raise ValidationError(
@@ -105,7 +107,11 @@ def cleanup(packageName):
         return False
 
 
-def moveIconsToStatic(packageName):
+def moveIconsToStatic(packageName, skipCheckingOfIcons):
+
+    if skipCheckingOfIcons:
+        return True
+
     iconsPath = os.path.join("files/", packageName, "icons/")
     destPath = os.path.join("packages", "static",
                             "images", "packages", packageName)
@@ -126,16 +132,20 @@ def moveIconsToStatic(packageName):
         for i in os.listdir(iconsPath):
             for ext in imageExtensions:
                 if i.endswith(ext):
-                    image = i
                     if os.path.exists(iconsPath) and not os.path.exists(destPath):
                         move(iconsPath, destPath)
+        return True
     except Exception as e:
         log.new(e).logError()
         return False
 
 
-def reDefineJson(packageName):
-    validate = validate_package(packageName)
+def reDefineJson(packageName, validated_data, skipCheckingOfIcons):
+
+    if skipCheckingOfIcons:
+        validated_data['server']['icon'] = Package.objects.get(packageName=packageName).server['icon']
+        return validated_data
+
     imagePath = os.path.join("packages", "static",
                              "images", "packages", packageName)
     imageExtensions = ["png", "jpg", "jpeg", "svg"]
@@ -143,13 +153,13 @@ def reDefineJson(packageName):
         log.new('{} does not exists '.format(imagePath)).logError()
         raise FileNotFoundError(imagePath)
 
-    if isinstance(validate, dict):
+    if isinstance(validated_data, dict):
         for i in os.listdir(imagePath):
             for ext in imageExtensions:
                 if i.endswith(ext):
-                    validate['server'][
+                    validated_data['server'][
                         'icon'] = "/static/images/packages/{0}/{1}".format(packageName, i)
-                    return validate
+                    return validated_data
     else:
         log.new(IsADirectoryError('Validated data is not dict!'))
         return False
@@ -163,6 +173,14 @@ def validate_json(json_object):
         return False
 
 
+def is_upgrade(package_name):
+    find_package = Package.objects.filter(packageName=package_name)
+
+    if find_package.exists():
+        return True
+    else:
+        return False
+
 def check_package_version(json_object):
     from distutils.version import LooseVersion
     js = json_object
@@ -173,10 +191,42 @@ def check_package_version(json_object):
         packageName=package_name) or SubmitPackage.objects.filter(packageName=package_name)
 
     if repo.exists():
-        repo_version = LooseVersion(repo.get().packageArgs["version"])
-        if repo_version >= package_version:
-            return {"status": False, "message": "We have never version of this package on system."}
+        repo_version = repo.get().packageArgs["version"]
+        if repo_version and package_version:
+            if LooseVersion(repo_version) >= package_version:
+                return {"status": False, "message": "We have never version of this package on system."}
+            else:
+                return {"status": True, "message": "Update on progress"}
         else:
-            return {"status": True, "message": "Update on progress"}
+            return {
+                "status": False,
+                "message": "We could not verify version number, please check it."
+            }
     else:
         return {"status": True, "message": "Success"}
+
+
+def compress_icon(script):
+    from PIL import Image
+    from django.conf import settings
+
+    package_name = script['packageArgs']['packageName']
+    image_path = os.path.join(settings.BASE_DIR, 'packages', 'static','images','packages', package_name)
+
+    for file in os.listdir(image_path):
+
+        try:
+            im = Image.open(image_path+'//'+file)
+
+            if file.endswith('png'):
+                file_format = 'PNG'
+            elif file.endswith('jpg') or file.endswith('jpeg'):
+                file_format = 'JPEG'
+
+
+            newImage = im.resize((300, 300))
+            newImage.save(image_path + '//' + file, format=file_format, quality=70)
+            return True
+        except Exception as e:
+            log.new(e).logError()
+        break

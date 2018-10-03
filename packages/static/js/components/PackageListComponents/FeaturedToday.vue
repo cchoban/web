@@ -6,9 +6,8 @@
             </div>
 
             <div class="featured-item-list">
-
                 <div v-for="package in popularPackages" v-if="!loading">
-                    <a class="featured-item" :style='"background-image: linear-gradient(to top, black, transparent), url("+package.server.icon+");"' @click="showPage(package.packageName, package.id)">
+                    <a class="featured-item" :style='"background-image: linear-gradient(to top, black, transparent), url("+package.server.icon+")"' @click="showPage(package.packageName, package.id)">
                         <h1> {{ package.packageName }} </h1>
                         <p></p>
                         <label>

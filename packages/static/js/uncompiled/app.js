@@ -3,6 +3,7 @@ window.axios = require('axios');
 let Vuex = require('vuex')
 let VueDisqus = require('vue-disqus')
 import VueTimeago from 'vue-timeago';
+import VueLazyload from 'vue-lazyload'
 
 
 // Config
@@ -60,18 +61,10 @@ Vue.component('userAccount', require('../components/userAccount.vue'));
 Vue.component('app', require('../components/app.vue'));
 
 
-
 Vue.use(Vuex)
 Vue.use(VueDisqus)
-Vue.use(VueTimeago, {
-    name: 'Timeago', // Component name, `Timeago` by default
-    locale: null, // Default locale
-    locales: {
-        'zh-CN': require('date-fns/locale/zh_cn'),
-        'ja': require('date-fns/locale/ja'),
-    }
-})
-
+Vue.use(VueTimeago)
+Vue.use(VueLazyload)
 window.store = new Vuex.Store({
     state: {
         package_page: {
