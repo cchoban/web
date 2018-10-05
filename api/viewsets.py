@@ -48,17 +48,25 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
     lookup_field = "packageName"
 
     def create(self, request):
-        package = self.request.data.get("package")
+        dump = helpers.dump_json
         package_name = self.request.data.get("packageName")
+        package_args = dump(self.request.data.get('packageArgs'))
+        package_uninstall_args = dump(self.request.data.get('packageUninstallArgs'))
+        package_server=dump(self.request.data.get('server'))
+        package_icon = self.request.data.get('packageIcon')
 
-        if not package or not package_name:
+        validate = helpers.validate_json
+
+        if not package_name or not package_args or not package_uninstall_args or not package_server or not package_icon:
             return Response({'error': 'Please provide a package.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
-        if package_name != str(package).split(".")[0]:
-            return Response({"error": "Could not accept your request."}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        # if not validate(package_args) or not validate(package_uninstall_args) or not validate(package_server):
+        #     return Response({'error': 'Make sure you have created package with Choban.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
 
         packageExists = Package.objects.filter(
             packageName=package_name.lower())[:1].exists()
+
         packageOwner = Package.objects.filter(
             packageName=package_name.lower(), user=self.request.user.id).exists()
 
@@ -68,33 +76,35 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
         submitPackageExists = SubmitPackage.objects.filter(
             packageName=package_name.lower())[:1].exists()
 
-        # if packageExists and not packageOwner and not submitPackages_packageOwner:
-        #     return Response({"error": "This package is already published."}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        submitPackageExists = False
+
 
         if not submitPackageExists:
-            if package and package_name:
-                uploaded = helpers.handle_uploaded_files(
-                    self.request.FILES['package'])
+            check_version = helpers.check_package_version(package_args)
+            if bool(check_version['status']):
+                return Response({'success': check_version['message']}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'error': check_version['message']}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
-                if not bool(uploaded["status"]):
-                    return Response({"error": uploaded["message"]}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            try:
+                serializer = SubmitPackageSerializer(data=request.data)
+                validated = serializer.is_valid()
+                if validated:
+                    create = serializer.save(packageName=package_name,
+                                            packageArgs=package_args,
+                                            packageUninstallArgs=package_uninstall_args,
+                                            server=package_server,
+                                            user=request.user
+                    )
+                    update = Setting.objects.update(do_update_packages=True)
 
-                if isinstance(uploaded, dict) or uploaded != False:
-                    serializer = SubmitPackageSerializer(data=request.data)
-                    validated = serializer.is_valid()
-                    if validated:
-                        serializer.save(packageName=uploaded["packageArgs"]["packageName"].lower(),
-                                        packageArgs=uploaded["packageArgs"],
-                                        packageUninstallArgs=uploaded[
-                                            "packageUninstallArgs"],
-                                        server=uploaded["server"],
-                                        user=request.user
-                                        )
-                        Setting.objects.update(do_update_packages=True)
-                        helpers.cleanup(package_name)
-
-                    return Response({"success": "You successfully submitted your package."}, status=status.HTTP_201_CREATED)
+                    if create and update:
+                        return Response({"success": "You successfully submitted your package."}, status=status.HTTP_201_CREATED)
+                    else:
+                        return Response({"success": "Could not accept your package, please try again later."}, status=status.HTTP_406_NOT_ACCEPTABLE)
                 else:
-                    return Response({"error": "Could not push your package."}, status=status.HTTP_406_NOT_ACCEPTABLE)
+                    return Response({'success'})
+            except Exception as e:
+                return False
         else:
             return Response({"error": "This package is already under approvement period."}, status=status.HTTP_406_NOT_ACCEPTABLE)
