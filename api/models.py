@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.urls import reverse
-from .helpers import compress_icon
 
 
 class Category(models.Model):
@@ -28,6 +27,7 @@ class Package(models.Model):
     packageArgs = JSONField()
     packageUninstallArgs = JSONField()
     server = JSONField()
+    packageIcon = models.ImageField(upload_to="media/", default='noimage.png')
     category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
     showcase = models.BooleanField(default=False)
@@ -58,6 +58,8 @@ class SubmitPackage(models.Model):
         return self.packageName
 
     def save(self, *args, **kwargs):
+        from .helpers import compress_icon
+
         if self.packageIcon:
             self.packageIcon = compress_icon(self.packageIcon)
         super(SubmitPackage, self).save(*args, **kwargs)

@@ -4,7 +4,7 @@ import os
 # from shutil import rmtree, move
 # from django.core.exceptions import ValidationError
 # import json
-# from .models import Package, SubmitPackage
+from .models import Package, SubmitPackage
 # from django.shortcuts import get_object_or_404
 # from . import Logger as log
 
@@ -183,7 +183,6 @@ import os
 
 def check_package_version(json_object):
     from distutils.version import LooseVersion
-    from .models import Package
 
     js = json_object
     package_name = js["packageName"]
@@ -220,9 +219,10 @@ def compress_icon(image):
         file_format = 'png'
     elif image_name.endswith('.jpg') or image_name.endswith('.jpeg'):
         file_format = 'jpg'
-
-    newImage.save(os.path.join(settings.BASE_DIR, 'media',
-                               str(image)), format=file_format, quality=70)
+    path = os.path.join(settings.BASE_DIR, 'media',
+                        str(image))
+    newImage.save(path, format=file_format, quality=70)
+    return image_name
 
 
 def handle_uploaded_files():

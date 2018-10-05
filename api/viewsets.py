@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-
+from . import Logger as log
 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Package.objects.all()
@@ -57,6 +57,7 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
 
         validate = helpers.validate_json
 
+        # print(package_name, package_args, package_uninstall_args, package_server, package_icon)
         if not package_name or not package_args or not package_uninstall_args or not package_server or not package_icon:
             return Response({'error': 'Please provide a package.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -81,11 +82,9 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
 
         if not submitPackageExists:
             check_version = helpers.check_package_version(package_args)
-            if bool(check_version['status']):
-                return Response({'success': check_version['message']}, status=status.HTTP_201_CREATED)
-            else:
-                return Response({'error': check_version['message']}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
+            if not bool(check_version['status']):
+                return Response({'error': check_version['message']}, status=status.HTTP_406_NOT_ACCEPTABLE)
             try:
                 serializer = SubmitPackageSerializer(data=request.data)
                 validated = serializer.is_valid()
@@ -94,8 +93,10 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
                                             packageArgs=package_args,
                                             packageUninstallArgs=package_uninstall_args,
                                             server=package_server,
+                                            packageIcon=package_icon,
                                             user=request.user
                     )
+
                     update = Setting.objects.update(do_update_packages=True)
 
                     if create and update:
@@ -105,6 +106,7 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
                 else:
                     return Response({'success'})
             except Exception as e:
+                log.new(e).logError()
                 return False
         else:
             return Response({"error": "This package is already under approvement period."}, status=status.HTTP_406_NOT_ACCEPTABLE)
