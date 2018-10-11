@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.urls import reverse
-
+from django.conf import settings
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
@@ -39,6 +39,9 @@ class Package(models.Model):
     def __str__(self):
         return self.packageName
 
+    # def save(self, *args, **kwargs):
+    #     packag
+
     def get_absolute_url(self):
         return reverse('getPackage', kwargs={'packageName': self.packageName})
 
@@ -61,7 +64,9 @@ class SubmitPackage(models.Model):
         from .helpers import compress_icon
 
         if self.packageIcon:
-            self.packageIcon = compress_icon(self.packageIcon)
+            compress_icon(self.packageIcon, self.packageName)
+            self.packageIcon = "packages/{}/{}".format(self.packageName, self.packageIcon)
+            self.server['icon'] = "{}packages/{}/{}".format(settings.MEDIA_URL, self.packageName, self.packageIcon)
         super(SubmitPackage, self).save(*args, **kwargs)
 
 class Setting(models.Model):

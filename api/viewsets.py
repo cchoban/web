@@ -77,9 +77,6 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
         submitPackageExists = SubmitPackage.objects.filter(
             packageName=package_name.lower())[:1].exists()
 
-        submitPackageExists = False
-
-
         if not submitPackageExists:
             check_version = helpers.check_package_version(package_args)
 
@@ -104,8 +101,9 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
                     else:
                         return Response({"success": "Could not accept your package, please try again later."}, status=status.HTTP_406_NOT_ACCEPTABLE)
                 else:
-                    return Response({'success'})
+                    return Response({'error': 'Your files could not be validated.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
             except Exception as e:
+                return Response({'error': str(e)})
                 log.new(e).logError()
                 return False
         else:

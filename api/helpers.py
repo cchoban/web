@@ -117,6 +117,14 @@ from .models import Package, SubmitPackage
 #                             "images", "packages", packageName)
 #     imageExtensions = ["png", "jpg", "jpeg", "svg"]
 
+#     if skipCheckingOfIcons:
+#         return True
+
+#     iconsPath = os.path.join("files/", packageName, "icons/")
+#     destPath = os.path.join("packages", "static",
+#                             "images", "packages", packageName)
+#     imageExtensions = ["png", "jpg", "jpeg", "svg"]
+
 #     if not os.path.exists(iconsPath):
 #         log.new('{} and {} does not exists'.format(
 #             iconsPath, destPath)).logInfo()
@@ -207,21 +215,30 @@ def check_package_version(json_object):
         return {"status": True, "message": "Success"}
 
 
-def compress_icon(image):
+def compress_icon(image, package_name):
     from PIL import Image
     from django.conf import settings
 
+    image_name = str(image)
+    path = os.path.join(settings.BASE_DIR, 'media', 'packages', package_name, image_name)
+
+    if os.path.exists(path):
+        return str(image)
+
     im = Image.open(image)
     newImage = im.resize((200, 200))
-    image_name = str(image)
+
 
     if image_name.endswith('.png'):
         file_format = 'png'
     elif image_name.endswith('.jpg') or image_name.endswith('.jpeg'):
         file_format = 'jpg'
-    path = os.path.join(settings.BASE_DIR, 'media',
-                        str(image))
-    newImage.save(path, format=file_format, quality=70)
+
+
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    sea = newImage.save(os.path.join(path, image_name), format=file_format, quality=70)
     return image_name
 
 
