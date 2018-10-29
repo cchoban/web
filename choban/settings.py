@@ -24,12 +24,13 @@ env.read_env(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY') or os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(env('DEBUG', default=True))
+DEBUG = bool(env('DEBUG', default=True)) or os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = env('ALLOWED_HOSTS').replace(' ', '').split(',') if env('ALLOWED_HOSTS') else ['*']
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').replace(' ', '').split(',') if env(
+    'ALLOWED_HOSTS') else ['*'] or os.environ.get('SECRET_KEY')
 
 # Application definition
 
@@ -71,7 +72,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = env('ROOT_URLCONF', default='choban.urls')
 
-CORS_ORIGIN_ALLOW_ALL = env('ROOT_URLCONF', default=False)
+CORS_ORIGIN_ALLOW_ALL = env('CORS_ORIGIN_ALLOW_ALL', default=False)  or os.environ.get('CORS_ORIGIN_ALLOW_ALL')
 
 TEMPLATES = [
     {
