@@ -30,7 +30,7 @@ SECRET_KEY = env('SECRET_KEY') or os.environ.get('SECRET_KEY')
 DEBUG = bool(env('DEBUG', default=True)) or os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').replace(' ', '').split(',') if env(
-    'ALLOWED_HOSTS') else ['*'] or os.environ.get('ALLOWED_HOSTS')
+    'ALLOWED_HOSTS') else ['choban.herokuapp.com', 'localhost:8000']
 
 # Application definition
 
