@@ -10,21 +10,26 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
-import os
+import os, environ
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 URL = "https://choban.herokuapp.com"
+
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'cilm0^9**l(b+jo927ptjm2+%fx=jxgi66a%3*c*31rg2^s0z8'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(env('DEBUG', default=True))
 
-ALLOWED_HOSTS = ["choban.herokuapp.com", "localhost", "*"]
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').replace(' ', '').split(',') if env('ALLOWED_HOSTS') else ['*']
 
 # Application definition
 
@@ -64,9 +69,9 @@ MIDDLEWARE = [
     'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
-ROOT_URLCONF = 'choban.urls'
+ROOT_URLCONF = env('ROOT_URLCONF', default='choban.urls')
 
-CORS_ORIGIN_ALLOW_ALL = True #Temporary
+CORS_ORIGIN_ALLOW_ALL = env('ROOT_URLCONF', default=False)
 
 TEMPLATES = [
     {
@@ -87,16 +92,17 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'choban.wsgi.application'
+WSGI_APPLICATION = env('WSGI_APPLICATION', default='choban.wsgi.application')
 
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASE_HOST = os.environ.get('DATABASE_HOST')
-DATABASE_NAME = os.environ.get('DATABASE_NAME')
-DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD')
-DATABASE_USER = os.environ.get('DATABASE_USER')
+DATABASE_HOST = env('DATABASE_HOST') or os.environ.get('DATABASE_HOST')
+DATABASE_NAME = env('DATABASE_NAME') or os.environ.get('DATABASE_NAME')
+DATABASE_PASSWORD = env('DATABASE_PASSWORD') or os.environ.get('DATABASE_PASSWORD')
+DATABASE_USER = env('DATABASE_USER') or os.environ.get('DATABASE_USER')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
