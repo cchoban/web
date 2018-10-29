@@ -20,7 +20,8 @@ def make_published(self, request, queryset):
                     packageName=i.packageName,
                     packageArgs=i.packageArgs,
                     packageUninstallArgs=i.packageUninstallArgs,
-                    server=i.server
+                    server=i.server,
+                    packageIcon=i.packageIcon
                 )
                 queryset.delete()
 

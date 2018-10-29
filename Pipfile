@@ -13,7 +13,7 @@ whitenoise = "*"
 django-filter = "*"
 django-ratelimit = "*"
 django-heroku = "*"
-Django = "==2.1"
+Django = "==2.1.2"
 Pillow = "*"
 
 [dev-packages]

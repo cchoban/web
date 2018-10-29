@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+from django.conf import settings
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
@@ -26,6 +27,7 @@ class Package(models.Model):
     packageArgs = JSONField()
     packageUninstallArgs = JSONField()
     server = JSONField()
+    packageIcon = models.ImageField(upload_to="media/", default='noimage.png')
     category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
     showcase = models.BooleanField(default=False)
@@ -37,23 +39,35 @@ class Package(models.Model):
     def __str__(self):
         return self.packageName
 
+    # def save(self, *args, **kwargs):
+    #     packag
+
     def get_absolute_url(self):
         return reverse('getPackage', kwargs={'packageName': self.packageName})
 
 
 class SubmitPackage(models.Model):
     id = models.AutoField(primary_key=True)
-    package = models.FileField(upload_to="uploads/", validators=[validate_file_extension])
     packageName = models.CharField(max_length=100, blank=True, null=True)
-    packageArgs = JSONField(default={})
-    packageUninstallArgs = JSONField(default={})
-    server = JSONField(default={})
+    packageArgs = JSONField()
+    packageUninstallArgs = JSONField()
+    server = JSONField()
+    packageIcon = models.ImageField(upload_to="media/", default='noimage.png')
     user = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
     created_at = models.DateTimeField(auto_now_add=True, editable=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, editable=True, null=True)
 
     def __str__(self):
         return self.packageName
+
+    def save(self, *args, **kwargs):
+        from .helpers import compress_icon
+
+        if self.packageIcon:
+            compress_icon(self.packageIcon, self.packageName)
+            self.packageIcon = "packages/{}/{}".format(self.packageName, self.packageIcon)
+            self.server['icon'] = "{}packages/{}/{}".format(settings.MEDIA_URL, self.packageName, self.packageIcon)
+        super(SubmitPackage, self).save(*args, **kwargs)
 
 class Setting(models.Model):
     do_update_packages = models.BooleanField(default=False)
