@@ -31,6 +31,20 @@ def category_index(request, category_name):
     return render(request, "category_page.html", context)
 
 
+from rest_framework.response import Response
+@api_view(['GET'])
+def category_id(request, category_name):
+    category = get_object_or_404(Category, slug=category_name)
+
+    context = {
+        "status": True,
+        "category": category.id,
+        "catname": category.name
+    }
+    return Response(context)
+
+
+
 def popular_index(request):
     context = {
         'maxentry': settings.REST_FRAMEWORK["PAGE_SIZE"]

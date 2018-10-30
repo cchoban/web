@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import index, getPackage, package_list, is_logged, category_index, popular_index, ListAllPackages, EditorPicks
+from .views import index, getPackage, package_list, is_logged, category_index, popular_index, ListAllPackages, EditorPicks, category_id
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -26,6 +26,8 @@ urlpatterns = [
     path('/popular', popular_index, name="PopularPackages"),
     path('/category/<slug:category_name>',
          category_index, name="CategoryPage"),
+    path('/categoryid/<slug:category_name>',
+         category_id, name="CategoryPwage"),
     path("/repo", package_list),
     path('/<slug:packageName>', getPackage, name="getPackage")
 ]
