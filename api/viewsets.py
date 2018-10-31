@@ -1,6 +1,6 @@
 from rest_framework import viewsets, filters
 from .models import Package, SubmitPackage, Setting
-from .serializers import PackageSerializer, SubmitPackageSerializer
+from .serializers import PackageSerializer, SubmitPackageSerializer, LoginSerializer
 from . import helpers
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
@@ -38,6 +38,29 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
+
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import login as django_login
+from django.contrib.auth.models import User
+class LoginViewset(viewsets.ViewSet):
+    http_method_names = ['post']
+
+    def create(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        django_login(request, user)
+        user_obj = get_object_or_404(User, username=user)
+        token, created = Token.objects.get_or_create(user=user)
+
+        user_details = {
+            'username': user_obj.username,
+            'email': user_obj.email,
+            'is_active': user_obj.is_active,
+        }
+
+
+        return Response({"token": token.key, "user": user_details}, status=200)
 
 class SubmitPackageViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
