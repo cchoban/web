@@ -1,193 +1,8 @@
-# import zipfile
-import os
-# from .validators import validate_package, validate_files
-# from shutil import rmtree, move
-# from django.core.exceptions import ValidationError
-# import json
-from .models import Package, SubmitPackage
-# from django.shortcuts import get_object_or_404
-# from . import Logger as log
+import os, json
+from .models import Package, SubmitPackage, Setting
 
-
-# class FolderNotFound(Exception):
-#     pass
-# class MissingIcons(Exception):
-#     pass
-
-
-# def createFolder(folderName):
-#     folder = "./files/" + folderName
-#     if not os.path.exists(folder):
-#         os.makedirs(folder)
-#         return "./files/" + folderName
-
-
-# def createFolders():
-#     folders = ["uploads", "files"]
-
-#     for i in folders:
-#         folder = os.path.join(i)
-#         try:
-#             if not os.path.exists(folder):
-#                 os.makedirs(folder)
-#         except Exception as e:
-#             log.new(e).logInfo()
-#             return True
-
-
-# def handle_uploaded_files(zipRequest):
-#     withoutExt = str(zipRequest).split('.')[0]
-#     isUpgrade = is_upgrade(withoutExt)
-#     unzip(withoutExt, zipRequest)
-#     validate = validate_package(withoutExt, isUpgrade)
-
-#     if isinstance(validate, dict):
-#         moveIconsToStatic(withoutExt, isUpgrade)
-#         new_json = reDefineJson(withoutExt, validate, isUpgrade)
-#         compress_icon(new_json)
-#         version = check_package_version(new_json)
-#         if bool(version["status"]):
-#             new_json["status"] = True
-#             return new_json
-#         else:
-#             return {"status": False, "message": version["message"]}
-#     else:
-#         cleanup(withoutExt)
-#         log.new(ValidationError(
-#             "We could not validate your JSON file. Be sure you have generated file with the Choban Package Manager.")).logError()
-#         raise ValidationError(
-#             "We could not validate your JSON file. Be sure you have generated file with the Choban Package Manager.")
-
-# def validateFiles(packageName):
-#     return validate_files()
-
-
-# def unzip(packageName, zip):
-#     folder = os.path.abspath(os.path.join("files", packageName))
-#     try:
-#         log.new('Extracting file. Package name: {}, Zip File: {}'.format(
-#             packageName, zip)).logInfo()
-#         zf = zipfile.ZipFile(zip, "r")
-#         zf.extractall(folder)
-#         zf.close()
-#     except Exception as e:
-#         log.new(e).logError()
-#         if e.errno == 17:
-#             return True
-
-
-# def validatePackage(packageName):
-#     return validate_package(packageName)
-
-
-# def write(zip):
-#     try:
-#         for chunk in zip.chunks():
-#             with open(os.path.join("uploads", str(zip)), "wb+") as f:
-#                 f.write(chunk)
-#                 f.close()
-#     except Exception as e:
-#         log.new(e).logError()
-#         return False
-
-
-# def cleanup(packageName):
-#     from django.conf import settings
-#     filesPath = os.path.join("files", packageName)
-#     uploadsPath = os.path.join(settings.BASE_DIR, "uploads", packageName+'.zip')
-
-#     try:
-#         if os.path.exists(filesPath):
-#             rmtree(filesPath)
-#             os.remove(filesPath)
-#         if os.path.exists(uploadsPath):
-#             os.remove(uploadsPath)
-#     except Exception as e:
-#         log.new(e).logError()
-#         return False
-
-
-# def moveIconsToStatic(packageName, skipCheckingOfIcons):
-
-#     if skipCheckingOfIcons:
-#         return True
-
-#     iconsPath = os.path.join("files/", packageName, "icons/")
-#     destPath = os.path.join("packages", "static",
-#                             "images", "packages", packageName)
-#     imageExtensions = ["png", "jpg", "jpeg", "svg"]
-
-#     if skipCheckingOfIcons:
-#         return True
-
-#     iconsPath = os.path.join("files/", packageName, "icons/")
-#     destPath = os.path.join("packages", "static",
-#                             "images", "packages", packageName)
-#     imageExtensions = ["png", "jpg", "jpeg", "svg"]
-
-#     if not os.path.exists(iconsPath):
-#         log.new('{} and {} does not exists'.format(
-#             iconsPath, destPath)).logInfo()
-#         log.new(FileNotFoundError(iconsPath)).logError()
-
-#     if len(os.listdir(iconsPath)) < 1:
-#         log.new(MissingIcons(
-#             'Missing icons under icons folder, please put one.')).logError()
-#         raise MissingIcons('Missing icons under icons folder as mentioned in your config file, please put one. ')
-
-
-#     try:
-#         for i in os.listdir(iconsPath):
-#             for ext in imageExtensions:
-#                 if i.endswith(ext):
-#                     if os.path.exists(iconsPath) and not os.path.exists(destPath):
-#                         move(iconsPath, destPath)
-#         return True
-#     except Exception as e:
-#         log.new(e).logError()
-#         return False
-
-
-# def reDefineJson(packageName, validated_data, skipCheckingOfIcons):
-
-#     if skipCheckingOfIcons:
-#         validated_data['server']['icon'] = Package.objects.get(packageName=packageName).server['icon']
-#         return validated_data
-
-#     imagePath = os.path.join("packages", "static",
-#                              "images", "packages", packageName)
-#     imageExtensions = ["png", "jpg", "jpeg", "svg"]
-#     if not os.path.exists(imagePath):
-#         log.new('{} does not exists '.format(imagePath)).logError()
-#         raise FileNotFoundError(imagePath)
-
-#     if isinstance(validated_data, dict):
-#         for i in os.listdir(imagePath):
-#             for ext in imageExtensions:
-#                 if i.endswith(ext):
-#                     validated_data['server'][
-#                         'icon'] = "/static/images/packages/{0}/{1}".format(packageName, i)
-#                     return validated_data
-#     else:
-#         log.new(IsADirectoryError('Validated data is not dict!'))
-#         return False
-
-
-# def validate_json(json_object):
-#     try:
-#         return json.loads(json_object)
-#     except json.JSONDecodeError as e:
-#         log.new(e).logError()
-#         return False
-
-
-# def is_upgrade(package_name):
-#     find_package = Package.objects.filter(packageName=package_name)
-
-#     if find_package.exists():
-#         return True
-#     else:
-#         return False
+class CacheDirectoryNotFound(Exception):
+    pass
 
 def check_package_version(json_object):
     from distutils.version import LooseVersion
@@ -261,3 +76,44 @@ def dump_json(json_object):
     except Exception as e:
         print(e)
         return False
+
+def check_for_cached_repo():
+    path = os.path.join("cache", "repo.json")
+    if os.path.exists(path):
+        try:
+            with open(path, "r") as f:
+                js = validate_json(f.read())
+                f.close()
+                if not isinstance(js, bool) and len(js) > 0:
+                    return js
+                else:
+                    return {}
+        except Exception as e:
+            raise CacheDirectoryNotFound(e)
+    else:
+        return {}
+
+
+def write_cache(json_key):
+    path = os.path.join("cache", "repo.json")
+    print(os.path.abspath(path))
+    try:
+        with open(path, "w") as f:
+            f.write(json.dumps(json_key))
+            f.close()
+
+            Setting.objects.filter(do_update_packages=True).update(
+                do_update_packages=False)
+            return json.dumps(json_key)
+        return False
+    except Exception as e:
+        create_cache_folder()
+        raise CacheDirectoryNotFound(e)
+
+def create_cache_folder():
+    path = os.path.abspath(os.path.join('cache'))
+
+    try:
+        os.makedirs(path)
+    except Exception as e:
+        print(e)
