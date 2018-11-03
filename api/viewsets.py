@@ -42,6 +42,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import login as django_login
 from django.contrib.auth.models import User
+from django_gravatar.helpers import get_gravatar_url, has_gravatar
 class LoginViewset(viewsets.ViewSet):
     http_method_names = ['post']
 
@@ -52,15 +53,39 @@ class LoginViewset(viewsets.ViewSet):
         django_login(request, user)
         user_obj = get_object_or_404(User, username=user)
         token, created = Token.objects.get_or_create(user=user)
+        userPicture = get_gravatar_url(user.email, size=650) if has_gravatar(user.email) else 'noimg.png'
+
 
         user_details = {
             'username': user_obj.username,
             'email': user_obj.email,
             'is_active': user_obj.is_active,
+            'gravatar': userPicture
         }
 
 
         return Response({"token": token.key, "user": user_details}, status=200)
+
+
+from ratelimit.decorators import ratelimit
+
+class GetTokenViewset(viewsets.ViewSet):
+    http_method_names = ['post']
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    # @ratelimit(key="ip", rate="2/d", block=True)
+    def create(self, request):
+        token = Token.objects.filter(user=request.user)
+        if token.exists() and not request.POST.get('generate_new_token'):
+            return Response({"status": False, "message": "Your account has already a token.", "key": token.get(user=request.user).key})
+        elif request.POST.get('generate_new_token'):
+            update_token = Token.objects.filter(user=request.user)
+            update_token.delete()
+
+        create_token = Token.objects.create(user=request.user)
+        if create_token:
+            return Response({"status": True, "message": "You successfully generated your new key!", "key": create_token.key})
 
 class SubmitPackageViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
@@ -80,7 +105,7 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
 
         validate = helpers.validate_json
 
-        # print(package_name, package_args, package_uninstall_args, package_server, package_icon)
+        print(f'PNAME: {package_name}, ARGS {package_args}, PUNARGS {package_uninstall_args}, SERVER{package_server}, ICON{package_icon}')
         if not package_name or not package_args or not package_uninstall_args or not package_server or not package_icon:
             return Response({'error': 'Please provide a package.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -131,3 +156,5 @@ class SubmitPackageViewSet(viewsets.ModelViewSet):
                 return False
         else:
             return Response({"error": "This package is already under approvement period."}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
