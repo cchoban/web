@@ -1,8 +1,10 @@
 import os, json
 from .models import Package, SubmitPackage, Setting
 
+
 class CacheDirectoryNotFound(Exception):
     pass
+
 
 def check_package_version(json_object):
     from distutils.version import LooseVersion
@@ -43,12 +45,10 @@ def compress_icon(image, package_name):
     im = Image.open(image)
     newImage = im.resize((200, 200))
 
-
     if image_name.endswith('.png'):
         file_format = 'png'
     elif image_name.endswith('.jpg') or image_name.endswith('.jpeg'):
         file_format = 'jpg'
-
 
     if not os.path.exists(path):
         os.makedirs(path)
@@ -60,6 +60,7 @@ def compress_icon(image, package_name):
 def handle_uploaded_files():
     pass
 
+
 def validate_json(json_object):
     import json
     try:
@@ -67,6 +68,7 @@ def validate_json(json_object):
         return True
     except Exception as e:
         return False
+
 
 def dump_json(json_object):
     import json
@@ -76,6 +78,7 @@ def dump_json(json_object):
     except Exception as e:
         print(e)
         return False
+
 
 def check_for_cached_repo():
     path = os.path.join("cache", "repo.json")
@@ -109,6 +112,7 @@ def write_cache(json_key):
     except Exception as e:
         create_cache_folder()
         raise CacheDirectoryNotFound(e)
+
 
 def create_cache_folder():
     path = os.path.abspath(os.path.join('cache'))

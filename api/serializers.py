@@ -8,16 +8,17 @@ from django.contrib.auth.models import User
 class PackageSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category')
     user_name = serializers.CharField(source='user')
+
     class Meta:
         model = Package
         fields = '__all__'
 
 
 class SubmitPackageSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = SubmitPackage
         fields = '__all__'
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -66,7 +67,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             }
         }
 
-
     def validate(self, data):
         password = data.get('password', '')
         password_confirmation = data.get('password_confirmation', '')
@@ -75,7 +75,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise ValidationError('Your passwords are not identical.')
 
         return data
-
 
     def create(self, validated_data):
         username = validated_data.get('username')

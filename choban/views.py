@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from api.models import Package
 
-def sitemap_index(request):
 
+def sitemap_index(request):
     sitemaps = {
         'Package': {
             'url': reverse('SitemapPackage'),

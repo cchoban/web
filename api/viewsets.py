@@ -73,7 +73,6 @@ class RegisterViewset(viewsets.ModelViewSet):
     serializer_class = RegisterSerializer
 
 
-
 from ratelimit.decorators import ratelimit
 
 
