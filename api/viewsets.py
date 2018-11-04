@@ -1,6 +1,6 @@
 from rest_framework import viewsets, filters
 from .models import Package, SubmitPackage, Setting
-from .serializers import PackageSerializer, SubmitPackageSerializer, LoginSerializer
+from .serializers import PackageSerializer, SubmitPackageSerializer, LoginSerializer, RegisterSerializer
 from . import helpers
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
@@ -66,6 +66,12 @@ class LoginViewset(viewsets.ViewSet):
         }
 
         return Response({"token": token.key, "user": user_details}, status=200)
+
+
+class RegisterViewset(viewsets.ModelViewSet):
+    http_method_names = ['post']
+    serializer_class = RegisterSerializer
+
 
 
 from ratelimit.decorators import ratelimit

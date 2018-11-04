@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
+
 class PackageSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category')
     user_name = serializers.CharField(source='user')
@@ -42,3 +43,46 @@ class LoginSerializer(serializers.Serializer):
             raise ValidationError(msg)
 
         return data
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password_confirmation = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'password',
+            'password_confirmation',
+            'email'
+        ]
+
+        extra_kwargs = {
+            'password': {
+                'write_only': True
+            },
+            'password_confirmation': {
+                'write_only': True
+            }
+        }
+
+
+    def validate(self, data):
+        password = data.get('password', '')
+        password_confirmation = data.get('password_confirmation', '')
+
+        if not password == password_confirmation:
+            raise ValidationError('Your passwords are not identical.')
+
+        return data
+
+
+    def create(self, validated_data):
+        username = validated_data.get('username')
+        email = validated_data.get('email')
+        password = validated_data.get('password')
+        user_obj = User(username=username, email=email)
+        user_obj.set_password(password)
+        user_obj.save()
+
+        return validated_data

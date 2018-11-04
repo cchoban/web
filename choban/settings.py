@@ -45,9 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'packages',
-    'account',
     'rest_framework.authtoken',
-    'crispy_forms',
     'django_gravatar',
     'django_filters',
     'corsheaders',
@@ -78,7 +76,6 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'packages', 'templates'),
             os.path.join(BASE_DIR, 'choban', 'templates')
         ],
         'APP_DIRS': True,
@@ -172,5 +169,4 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10
 }
-CRISPY_TEMPLATE_PACK = 'uni_form'
 LOGIN_REDIRECT_URL = '/packages'
