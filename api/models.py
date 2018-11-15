@@ -66,8 +66,9 @@ class SubmitPackage(models.Model):
 
         if self.packageIcon:
             compress_icon(self.packageIcon, self.packageName)
-            self.packageIcon = "packages/{}/{}".format(self.packageName, self.packageIcon)
             self.server['icon'] = "{}packages/{}/{}".format(settings.MEDIA_URL, self.packageName, self.packageIcon)
+            self.packageIcon = self.server['icon']
+
         super(SubmitPackage, self).save(*args, **kwargs)
 
 

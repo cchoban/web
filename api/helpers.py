@@ -37,9 +37,10 @@ def compress_icon(image, package_name):
     from django.conf import settings
 
     image_name = str(image)
-    path = os.path.join(settings.BASE_DIR, 'media', 'packages', package_name, image_name)
+    path =  os.path.join(settings.BASE_DIR, 'media', 'packages', package_name)
+    image_path = os.path.join(path, image_name)
 
-    if os.path.exists(path):
+    if os.path.exists(image_path):
         return str(image)
 
     im = Image.open(image)
@@ -53,7 +54,7 @@ def compress_icon(image, package_name):
     if not os.path.exists(path):
         os.makedirs(path)
 
-    sea = newImage.save(os.path.join(path, image_name), format=file_format, quality=70)
+    sea = newImage.save(image_path, format=file_format, quality=70)
     return image_name
 
 
