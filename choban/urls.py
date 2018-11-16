@@ -20,7 +20,8 @@ from django.contrib.sitemaps.views import sitemap
 from . import sitemaps
 from .views import sitemap_index as index
 from api.views import GetPackages
-
+from django.conf import settings
+from django.conf.urls.static import static
 sitemap_index = {
     'Package': sitemaps.PackageSitemap,
 }
@@ -32,4 +33,5 @@ urlpatterns = [
     path('sitemap_index.xml', index, name='Sitemap'),
     path('sitemap_package.xml', sitemap, {'sitemaps': sitemap_index, 'template_name': 'package-sitemap.html'},
          name='SitemapPackage'),
-]
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
