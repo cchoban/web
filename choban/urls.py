@@ -28,7 +28,7 @@ sitemap_index = {
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls), name="api"),
+    path('/', include(router.urls), name="api"),
     path('api/repo/', GetPackages.as_view(), name="PackageRepo"),
     path('sitemap_index.xml', index, name='Sitemap'),
     path('sitemap_package.xml', sitemap, {'sitemaps': sitemap_index, 'template_name': 'package-sitemap.html'},
