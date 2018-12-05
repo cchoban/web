@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from . import helpers
 from .models import Package, Setting
 from django.conf import settings
-
+from django.urls import reverse
 
 class GetPackages(APIView):
 
@@ -17,8 +17,7 @@ class GetPackages(APIView):
             json = {}
             for i in packages:
                 json.update({
-                    i.packageName: settings.URL +
-                                   "/api/packages/" + str(i.id) + "?format=json"
+                    i.packageName: settings.URL + reverse('Packages-list') + str(i.id) + "?format=json"
                 })
             helpers.write_cache(json)
 
@@ -26,8 +25,7 @@ class GetPackages(APIView):
             json = {}
             for i in packages:
                 json.update({
-                    i.packageName: settings.URL +
-                                   "/api/packages/" + str(i.id) + "?format=json"
+                    i.packageName: settings.URL + reverse('Packages-list') + str(i.id) + "?format=json"
                 })
 
         return Response(json)
