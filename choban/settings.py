@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os, environ
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 URL = "https://choban.herokuapp.com"
@@ -30,7 +29,7 @@ SECRET_KEY = env('SECRET_KEY') or os.environ.get('SECRET_KEY')
 DEBUG = bool(env('DEBUG', default=True)) or os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').replace(' ', '').split(',') if env(
-    'ALLOWED_HOSTS') else ['*'] or os.environ.get('ALLOWED_HOSTS')
+    'ALLOWED_HOSTS') else ['choban.herokuapp.com', 'localhost:8000']
 
 # Application definition
 
@@ -45,14 +44,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'packages',
-    'account',
     'rest_framework.authtoken',
-    'crispy_forms',
     'django_gravatar',
     'django_filters',
     'corsheaders',
 ]
-
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -72,13 +68,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = env('ROOT_URLCONF', default='choban.urls')
 
-CORS_ORIGIN_ALLOW_ALL = env('CORS_ORIGIN_ALLOW_ALL', default=False)  or os.environ.get('CORS_ORIGIN_ALLOW_ALL')
+CORS_ORIGIN_ALLOW_ALL = env('CORS_ORIGIN_ALLOW_ALL', default=False) or os.environ.get('CORS_ORIGIN_ALLOW_ALL')
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'packages', 'templates'),
             os.path.join(BASE_DIR, 'choban', 'templates')
         ],
         'APP_DIRS': True,
@@ -94,7 +89,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = env('WSGI_APPLICATION', default='choban.wsgi.application')
-
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -140,7 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -154,7 +147,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 STATIC_URL = '/static/'
@@ -162,7 +154,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_DIRS = [
@@ -172,5 +163,4 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10
 }
-CRISPY_TEMPLATE_PACK = 'uni_form'
 LOGIN_REDIRECT_URL = '/packages'

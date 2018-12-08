@@ -5,12 +5,13 @@ from django.core.exceptions import ValidationError
 from . import Logger as log
 
 
-
 class MissingIconsFolder(Exception):
     pass
 
+
 class MissingInstallationScript(Exception):
     pass
+
 
 def validate_file_extension(value):
     ext = splitext(value.name)[1]

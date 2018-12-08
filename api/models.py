@@ -7,6 +7,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.conf import settings
 
+
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -17,9 +18,9 @@ class Category(models.Model):
         self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
 
-
     def __str__(self):
         return self.name
+
 
 class Package(models.Model):
     id = models.AutoField(primary_key=True)
@@ -65,9 +66,11 @@ class SubmitPackage(models.Model):
 
         if self.packageIcon:
             compress_icon(self.packageIcon, self.packageName)
-            self.packageIcon = "packages/{}/{}".format(self.packageName, self.packageIcon)
             self.server['icon'] = "{}packages/{}/{}".format(settings.MEDIA_URL, self.packageName, self.packageIcon)
+            self.packageIcon = self.server['icon']
+
         super(SubmitPackage, self).save(*args, **kwargs)
+
 
 class Setting(models.Model):
     do_update_packages = models.BooleanField(default=False)
