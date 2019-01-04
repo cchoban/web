@@ -5,4 +5,4 @@ register = template.Library()
 @register.simple_tag
 def site_url():
     url = settings.URL
-return url
+    return url
