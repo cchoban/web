@@ -13,4 +13,5 @@ def sitemap_index(request):
     context = {
         'sitemap_index': sitemaps
     }
-    return render(request, 'sitemap_index.html', context)
+
+    return render(request, 'sitemap_index.html', context, content_type="application/xml")
