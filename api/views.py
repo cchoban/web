@@ -17,7 +17,7 @@ class GetPackages(APIView):
             json = {}
             for i in packages:
                 json.update({
-                    i.packageName: settings.URL + reverse('Packages-list') + str(i.id) + "?format=json"
+                    i.packageName: settings.URL + reverse('Packages-list') + str(i.id) + "/?format=json"
                 })
             helpers.write_cache(json)
 
@@ -25,7 +25,7 @@ class GetPackages(APIView):
             json = {}
             for i in packages:
                 json.update({
-                    i.packageName: settings.URL + reverse('Packages-list') + str(i.id) + "?format=json"
+                    i.packageName: settings.URL + reverse('Packages-list') + str(i.id) + "/?format=json"
                 })
 
         return Response(json)
