@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env.read_env(os.path.join(BASE_DIR, '.env'))
 
 URL = env('URL') or 'https://choban.app'
-
+PACKAGES_URL = URL+'/packages'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
