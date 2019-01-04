@@ -44,7 +44,7 @@ class Package(models.Model):
     #     packag
 
     def get_absolute_url(self):
-        return reverse('getPackage', kwargs={'packageName': self.packageName})
+        return settings.PACKAGES_URL+'/'+self.packageName
 
 
 class SubmitPackage(models.Model):
