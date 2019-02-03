@@ -161,7 +161,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "packages", "static")
 ]
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
 }
 LOGIN_REDIRECT_URL = '/packages'

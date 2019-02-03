@@ -2,6 +2,7 @@ from rest_framework import viewsets, filters
 from .models import Package, SubmitPackage, Setting
 from .serializers import PackageSerializer, SubmitPackageSerializer, LoginSerializer, RegisterSerializer
 from . import helpers
+from .pagination import StandardResultsSetPagination
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -20,6 +21,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
     ordering_fields = ('created_at', 'updated_at', 'download_count',)
     search_fields = ("packageName",)
     http_method_names = ['get']
+    pagination_class = StandardResultsSetPagination
 
     def retrieve(self, request, pk=None):
         downloading = self.request.query_params.get('download')
