@@ -1,6 +1,6 @@
 from rest_framework import viewsets, filters
 from .models import Package, SubmitPackage, Setting
-from .serializers import PackageSerializer, SubmitPackageSerializer, LoginSerializer, RegisterSerializer
+from .serializers import PackageSerializer, SubmitPackageSerializer, LoginSerializer, RegisterSerializer, UserSerializer
 from . import helpers
 from .pagination import StandardResultsSetPagination
 from rest_framework.response import Response
@@ -68,6 +68,17 @@ class LoginViewset(viewsets.ViewSet):
         }
 
         return Response({"token": token.key, "user": user_details}, status=200)
+
+class UserAccount(viewsets.ViewSet):
+    http_method_names = ['get']
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserSerializer
+
+    def list(self, request):
+        queryset = User.objects.all()
+        serializer = UserSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class RegisterViewset(viewsets.ModelViewSet):

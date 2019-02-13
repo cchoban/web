@@ -13,6 +13,10 @@ class PackageSerializer(serializers.ModelSerializer):
         model = Package
         fields = '__all__'
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'last_login', 'is_active']
 
 class SubmitPackageSerializer(serializers.ModelSerializer):
     class Meta:
