@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import Package, SubmitPackage, Setting, Category
-from django.shortcuts import get_object_or_404
 from . import Logger as log
 
 admin.site.register(Package)

@@ -1,10 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
-from .validators import validate_file_extension
 from django.contrib.auth.models import User
-from django.utils import timezone
 from django.template.defaultfilters import slugify
-from django.urls import reverse
 from django.conf import settings
 
 
