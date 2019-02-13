@@ -60,11 +60,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.gzip.GZipMiddleware',
-    # 'django.middleware.cache.UpdateCacheMiddleware',
-    # 'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.cache.FetchFromCacheMiddleware'
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
 ROOT_URLCONF = env('ROOT_URLCONF', default='choban.urls')
@@ -156,7 +155,6 @@ STATIC_ROOT = env('STATICFILES_DIR', default=os.path.join(BASE_DIR, 'staticfiles
 MEDIA_URL = '/media/'
 MEDIA_ROOT = env('MEDIAFILES_DIR', default=os.path.join(BASE_DIR, 'media')) or os.environ.get('MEDIAFILES_DIR')
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "packages", "static")
 ]
