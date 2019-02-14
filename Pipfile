@@ -16,6 +16,7 @@ django-cors-headers = "*"
 django-environ = "*"
 Django = "==2.1.5"
 Pillow = "==5.2.0"
+python-memcached = "*"
 
 [requires]
 python_version = "3.7"
