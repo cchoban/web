@@ -8,10 +8,11 @@ services:
         POSTGRES_PASSWORD: "!9ty9I6oiU@9*b"
         POSTGRES_DB: choban
         POSTGRES_USER: choban
-#   redis:
-#     image: redis:5.0.3-alpine
-#     expose:
-#       - 6379
+  memcached:
+    image: memcached:1.5.12-alpine
+    container_name: memcached
+    expose:
+      - 11211
   web:
       build: .
       command: python manage.py runserver 0.0.0.0:8000
