@@ -2,18 +2,22 @@ version: '3'
 
 services:
   db:
-    image: postgres
-  web:
-    build: .
-    command: python3 manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
+    image: postgres:11.1-alpine
+    restart: always
     environment:
-      - DATABASE_HOST=ec2-54-217-250-0.eu-west-1.compute.amazonaws.com
-      - DATABASE_NAME=dd0fcem2n8m70d
-      - DATABASE_USER=inrjgsxzsgnzzg
-      - DATABASE_PASSWORD=21a7a66faa6bfdecb4c8902e7da4a5e8c484a9793c639a889a2be83fc77eb0ca
+        POSTGRES_PASSWORD: "!9ty9I6oiU@9*b"
+        POSTGRES_DB: choban
+        POSTGRES_USER: choban
+  memcached:
+    image: memcached:1.5.12-alpine
+    container_name: memcached
+    expose:
+      - 11211
+  web:
+      build: .
+      command: python manage.py runserver 0.0.0.0:8000
+      ports:
+        - "8000:8000"
+      volumes:
+        - ./.env:/backend/.env
+        - ./:/backend
