@@ -13,3 +13,4 @@ WORKDIR /backend
 ENV STATICFILES_DIR=/usr/src/app/static
 ENV MEDIAFILES_DIR=/usr/src/app/media
 EXPOSE 8080
+WORKDIR /backend/src
