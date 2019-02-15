@@ -20,6 +20,8 @@ env.read_env(os.path.join(BASE_DIR, '.env'))
 URL = env('URL') or 'https://choban.app'
 PACKAGES_URL = URL+'/packages'
 
+FORCE_SCRIPT_NAME = env('FORCE_SCRIPT_NAME', default=None)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -61,9 +63,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.gzip.GZipMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware'
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
 ROOT_URLCONF = env('ROOT_URLCONF', default='choban.urls')
