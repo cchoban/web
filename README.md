@@ -1,4 +1,4 @@
-# Choban package manager
+# Choban software automation
 
 
 ### Requirements
