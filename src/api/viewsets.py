@@ -90,20 +90,23 @@ from ratelimit.decorators import ratelimit
 
 
 class GetTokenViewset(viewsets.ViewSet):
-    http_method_names = ['post']
+    http_method_names = ['post', 'get']
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+
+    def list(self, request):
+        token = Token.objects.filter(user=request.user)
+        if token.exists():
+            return Response({"status": True, "message": "Your token",
+                             "key": token.get(user=request.user).key})
 
     @ratelimit(key="ip", rate="2/d", block=True)
     def create(self, request):
         token = Token.objects.filter(user=request.user)
-        if token.exists() and not request.POST.get('generate_new_token'):
-            return Response({"status": False, "message": "Your account has already a token.",
-                             "key": token.get(user=request.user).key})
-        elif request.POST.get('generate_new_token'):
-            update_token = Token.objects.filter(user=request.user)
-            update_token.delete()
 
+        update_token = Token.objects.filter(user=request.user)
+        update_token.delete()
+        
         create_token = Token.objects.create(user=request.user)
         if create_token:
             return Response(
