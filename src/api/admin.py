@@ -32,7 +32,7 @@ def make_published(self, request, queryset):
                 message_bit = "Updated version from '{}' to '{}' of package '{}'".format(
                     package.packageArgs['version'], i.packageArgs['version'], i.packageName)
                 packageExists.update(
-                    packageArgs=i.packageArgs, packageUninstallArgs=i.packageUninstallArgs, server=i.server)
+                    packageArgs=i.packageArgs, packageUninstallArgs=i.packageUninstallArgs, server=i.server, packageIcon=i.packageIcon)
                 queryset.delete()
                 self.message_user(request, message_bit, "success")
 
