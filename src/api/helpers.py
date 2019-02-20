@@ -50,7 +50,7 @@ def compress_icon(image, package_name):
         convert = im.convert(mode='P', palette=Image.ADAPTIVE)
     else:
         convert = im
-    convert.thumbnail([5000, 300], Image.ANTIALIAS)
+    convert.thumbnail([300, 300], Image.ANTIALIAS)
 
     if not os.path.exists(path):
         os.makedirs(path)
