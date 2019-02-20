@@ -37,25 +37,27 @@ def compress_icon(image, package_name):
     from django.conf import settings
 
     image_name = str(image)
-    path =  os.path.join(settings.BASE_DIR, 'media', 'packages', package_name)
-    image_path = os.path.join(path, image_name)
+    file_format = image_name.split('.')[1]
+    path = os.path.join(settings.MEDIA_ROOT, 'packages', package_name)
+    changed_name = f'{package_name}.{file_format}'
+    changed_path = os.path.join(path, changed_name)
 
-    if os.path.exists(image_path):
-        return str(image)
+    if os.path.exists(changed_path):
+        return changed_name
 
     im = Image.open(image)
-    newImage = im.resize((200, 200))
-
-    if image_name.endswith('.png'):
-        file_format = 'png'
-    elif image_name.endswith('.jpg') or image_name.endswith('.jpeg'):
-        file_format = 'jpg'
+    if file_format == 'png':
+        convert = im.convert(mode='P', palette=Image.ADAPTIVE)
+    else:
+        convert = im
+    convert.thumbnail([5000, 300], Image.ANTIALIAS)
 
     if not os.path.exists(path):
         os.makedirs(path)
 
-    sea = newImage.save(image_path, format=file_format, quality=70)
-    return image_name
+    convert.save(changed_path, format=file_format, quality=80, optimize=True)
+
+    return changed_name
 
 
 def handle_uploaded_files():
