@@ -56,18 +56,9 @@ class LoginViewset(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         django_login(request, user)
-        user_obj = get_object_or_404(User, username=user)
         token, created = Token.objects.get_or_create(user=user)
-        userPicture = get_gravatar_url(user.email, size=650) if has_gravatar(user.email) else 'noimg.png'
 
-        user_details = {
-            'username': user_obj.username,
-            'email': user_obj.email,
-            'is_active': user_obj.is_active,
-            'gravatar': userPicture
-        }
-
-        return Response({"token": token.key, "user": user_details}, status=200)
+        return Response({"token": token.key}, status=200)
 
 class UserAccount(viewsets.ViewSet):
     http_method_names = ['get']
@@ -78,6 +69,10 @@ class UserAccount(viewsets.ViewSet):
     def list(self, request):
         queryset = User.objects.all()
         serializer = UserSerializer(queryset, many=True)
+        gravatar_noimg = 'http://www.gravatar.com/avatar/?s=3000'
+        gravatar = get_gravatar_url(serializer.data[0]['email'], size=300) if has_gravatar(serializer.data[0]['email']) else gravatar_noimg
+        serializer.data[0]['gravatar'] = gravatar
+
         return Response({"user": serializer.data[0]})
 
 
@@ -106,7 +101,7 @@ class GetTokenViewset(viewsets.ViewSet):
 
         update_token = Token.objects.filter(user=request.user)
         update_token.delete()
-        
+
         create_token = Token.objects.create(user=request.user)
         if create_token:
             return Response(
